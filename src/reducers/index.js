@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'src/reducers/node_modules/redux';
 import balance from './balance';
 import bitcoin from './bitcoin';
 

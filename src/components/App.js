@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'src/components/node_modules/react'
 import Wallet from './Wallet';
 import Loot from './Loot'
 

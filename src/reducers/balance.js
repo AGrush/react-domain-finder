@@ -1,5 +1,5 @@
 import * as constants from '../actions/constants'
-import { read_cookie, bake_cookie } from 'sfcookies'
+import { read_cookie, bake_cookie } from 'src/reducers/node_modules/sfcookies'
 
 const BALANCE_COOKIE = 'BALANCE_COOKIE';
 

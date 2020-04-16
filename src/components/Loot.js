@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'src/components/node_modules/react';
+import { connect } from 'src/components/node_modules/react-redux';
 import { fetchBitcoin } from '../actions/bitcoin';
 
 export class Loot extends Component {

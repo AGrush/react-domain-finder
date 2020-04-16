@@ -1,11 +1,11 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { createStore, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk'
+import React from 'src/node_modules/react';
+import ReactDOM from 'src/node_modules/react-dom';
+import { createStore, applyMiddleware } from 'src/node_modules/redux';
+import thunk from 'src/node_modules/redux-thunk'
 import rootReducer from './reducers';
-import { Provider } from 'react-redux';
+import { Provider } from 'src/node_modules/react-redux';
 import App from './components/App';
-import './index.css'
+import 'src/index.css'
 // import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
