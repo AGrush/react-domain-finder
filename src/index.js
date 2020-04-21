@@ -1,19 +1,19 @@
-import React from 'src/node_modules/react';
-import ReactDOM from 'src/node_modules/react-dom';
-import { createStore, applyMiddleware } from 'src/node_modules/redux';
-import thunk from 'src/node_modules/redux-thunk'
-import rootReducer from './reducers';
-import { Provider } from 'src/node_modules/react-redux';
+import React from 'react';
+import ReactDOM from 'react-dom';
+// import { createStore, applyMiddleware } from 'redux';
+// import thunk from 'redux-thunk'
+// import rootReducer from './reducers';
+// import { Provider } from 'react-redux';
 import App from './components/App';
-import 'src/index.css'
+import './index.css'
 // import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <Provider store={createStore(rootReducer, applyMiddleware(thunk))}>
+  // <Provider store={createStore(rootReducer, applyMiddleware(thunk))}>
     <React.StrictMode>
       <App />
-    </React.StrictMode>
-  </Provider>,
+    </React.StrictMode>,
+  // </Provider>
   document.getElementById('root')
 );
 

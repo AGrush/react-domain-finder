@@ -1,16 +1,15 @@
-import React from 'src/components/node_modules/react'
-import Wallet from './Wallet';
-import Loot from './Loot'
+import React from 'react'
+import ControlPanel from './ControlPanel';
+import Results from './Results'
+import Header from './Header'
 
 const App = () => {
   return (
     <div>
-      <h2>Loot Check </h2>
-      <hr />
-      <Wallet />
-      <hr />
-      <Loot />
-      <div>Powered by <a target='_blank' rel="noopener noreferrer" href='https://www.coindesk.com/price'>Coindesk</a></div>
+      <Header />
+      <ControlPanel />
+      <br />
+      <Results />
     </div>
   )
 }
