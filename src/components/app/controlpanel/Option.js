@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 
-export default class Hyphen extends Component {
+export default class Option extends Component {
   render() {
     return (
-      <label class="container">
+      <label className="container">
           <input name="hyphen" type="checkbox" />
-          <span class="checkmark"></span>
+          <span className="checkmark"></span>
       </label>
-
     )
   }
 }

@@ -1,10 +1,18 @@
 import React from 'react'
 
-export default function Word() {
+const Word = ({onRemoveWord, id, onChangeWord}) => {
   return (
     <div>
-      <input type="text" required="required" name="firstWord" id="firstWord" />
-      <span onclick="removeFields()" class="deletebtn">-</span>
+       <input 
+          type="text" 
+          /*required="required"*/ 
+          name="word" 
+          id={id} 
+          onChange={(e) => {onChangeWord(e)}} 
+        /> 
+        <span onClick={() => {onRemoveWord(id)}} className="deletebtn">-</span>
     </div>
   )
 }
+
+export default Word

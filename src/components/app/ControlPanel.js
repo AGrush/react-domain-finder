@@ -3,13 +3,17 @@ import WordsContainer from './controlpanel/WordsContainer'
 import Option from './controlpanel/Option'
 
 export default class ControlPanel extends Component {
+  processForm = () => {
+
+  }
+
   render() {
     return (
-      <form id="form1" method="post" onsubmit="return processForm()">
+      <form id="form1" method="post" onSubmit={this.processForm}>
         <div className="wrapper">
-            <WordsContainer />
+            <WordsContainer id="container1"/>
             <Option />
-            <WordsContainer />
+            <WordsContainer id="container2"/>
 
             <div className="wrapper-options">
               <Option />
