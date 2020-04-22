@@ -1,16 +1,15 @@
 import React from 'react'
-import ControlPanel from './ControlPanel';
-import Results from './Results'
-import Header from './Header'
+import ControlPanel from './app/ControlPanel';
+import Results from './app/Results'
+import Header from './app/Header'
 
 const App = () => {
   return (
-    <div>
+    <React.Fragment>
       <Header />
       <ControlPanel />
-      <br />
       <Results />
-    </div>
+    </React.Fragment>
   )
 }
 

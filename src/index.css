@@ -147,7 +147,7 @@
     content: "reverse";
 }
 
-.domCheckboxWrapper {
+.wrapper-options {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -463,11 +463,11 @@ p {
     padding-bottom: 20px;
   }
 
-  .domCheckboxWrapper label {
+  .wrapper-options label {
     left: -20px;
   }
 
-  .domCheckboxWrapper {
+  .wrapper-options {
     padding: 10px;
   }
   
