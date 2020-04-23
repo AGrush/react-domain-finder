@@ -7,33 +7,28 @@ export default class ControlPanel extends Component {
   state = {
     words: [
       { 
-        word: "goo",
+        word: "",
         id: 1,
         column: 1
       },
       { 
-        word: "444",
+        word: "",
         id: 2,
-        column: 2
-      },
-      { 
-        word: "555",
-        id: 3,
         column: 2
       }
     ]
   }
 
   onRemoveWord = id => {
-    console.log('remove')
+    //console.log('remove')
     const { words } = this.state;
     const updatedWords = words.filter(word => word.id !== id)
     this.setState ({ words: updatedWords})
   }
 
   onAddWord = id => {
-    console.log('add')
-    console.log(id)
+    //console.log('add')
+    //console.log(id)
     
     const { words} = this.state;
 
@@ -51,7 +46,7 @@ export default class ControlPanel extends Component {
   }
 
   onChangeWord = (columnId, e) => {
-    console.log(columnId, e.target.id, e.target.value, [e.target.name]);
+    //console.log(columnId, e.target.id, e.target.value, [e.target.name]);
 
     const { words} = this.state;
 
@@ -66,7 +61,7 @@ export default class ControlPanel extends Component {
       } return null;
     })
 
-    console.log(newWords)
+    //console.log(newWords)
     this.setState ({ words: newWords})
   } 
 
