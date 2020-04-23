@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import WordsContainer from './controlpanel/WordsContainer'
-import Option from './controlpanel/Option'
+import WordsContainer from './ControlPanel/WordsContainer'
+import Option from './ControlPanel/Option'
 import { max_number } from '../helpers'
 
 export default class ControlPanel extends Component {

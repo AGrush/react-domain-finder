@@ -1,7 +1,7 @@
 import React from 'react'
-import ControlPanel from './app/ControlPanel';
-import Results from './app/Results'
-import Header from './app/Header'
+import ControlPanel from './App/ControlPanel';
+import Results from './App/Results'
+import Header from './App/Header'
 
 const App = () => {
   return (
