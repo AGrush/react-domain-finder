@@ -1,16 +1,17 @@
 import React from 'react'
 
-const Word = ({onRemoveWord, id, onChangeWord}) => {
+const Word = ({onRemoveWord, wordId, onChangeWord, columnId}) => {
   return (
     <div>
        <input 
           type="text" 
-          /*required="required"*/ 
+          // eslint-disable-next-line
+          required={wordId===1 && columnId==1}
           name="word" 
-          id={id} 
-          onChange={(e) => {onChangeWord(e)}} 
+          id={wordId} 
+          onChange={(e) => onChangeWord(columnId, e)} 
         /> 
-        <span onClick={() => {onRemoveWord(id)}} className="deletebtn">-</span>
+        <span onClick={() => {onRemoveWord(wordId)}} className="deletebtn">-</span>
     </div>
   )
 }
