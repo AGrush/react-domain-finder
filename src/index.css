@@ -28,9 +28,9 @@
 }
 
 /* Create a custom checkbox */
-.checkmark,
-.checkmarkcom,
-.checkmarkreverse {
+.checkmark-hyphen,
+.checkmark-com,
+.checkmark-reverse {
   position: absolute;
   top: 0;
   left: 0;
@@ -40,19 +40,19 @@
   
 }
 
-.checkmarkcom {
+.checkmark-com {
   width: 64px;
 }
 
-.checkmarkreverse {
+.checkmark-reverse {
     width: 76px;
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input ~ .checkmark,
-.container4:hover input ~ .checkmarkcom,
-.container5:hover input ~ .checkmarkcom,
-.container6:hover input ~ .checkmarkreverse {
+.container:hover input ~ .checkmark-hyphen,
+.container4:hover input ~ .checkmark-com,
+.container5:hover input ~ .checkmark-com,
+.container6:hover input ~ .checkmark-reverse {
   background-color: #ccc;
   position: absolute;
   left: 0;
@@ -62,7 +62,7 @@
 }
 
 .container:hover input ~ .checkmark:after,
-.container:hover input ~ .checkmarkcom:after {
+.container:hover input ~ .checkmark-com:after {
   content: "";
   position: absolute;
   left: 7px;
@@ -88,7 +88,7 @@
   /* border: lightgoldenrodyellow 3px solid; */
 }
 
-.container6:hover input ~ .checkmarkreverse:after {
+.container6:hover input ~ .checkmark-reverse:after {
     content: "reverse";
     position: absolute;
     left: 7px;
@@ -100,23 +100,23 @@
   }
 
 /* When the checkbox is checked, add a blue background */
-.container input:checked ~ .checkmark,
-.container4 input:checked ~ .checkmarkcom,
-.container5 input:checked ~ .checkmarkcom,
-.container6 input:checked ~ .checkmarkreverse {
+.container input:checked ~ .checkmark-hyphen,
+.container4 input:checked ~ .checkmark-com,
+.container5 input:checked ~ .checkmark-com,
+.container6 input:checked ~ .checkmark-reverse {
   background-color: rgb(252, 146, 146);
 }
 
-/* Show the checkmark when checked */
-.container input:checked ~ .checkmark:after,
-.container4 input:checked ~ .checkmarkcom:after,
-.container5 input:checked ~ .checkmarkcom:after,
-.container6 input:checked ~ .checkmarkreverse:after {
+/* Show the checkmark-hyphen when checked */
+.container input:checked ~ .checkmark-hyphen:after,
+.container4 input:checked ~ .checkmark-com:after,
+.container5 input:checked ~ .checkmark-com:after,
+.container6 input:checked ~ .checkmark-reverse:after {
   display: block;
 }
 
-/* Style the checkmark/indicator */
-.container .checkmark:after {
+/* Style the checkmark-hyphen/indicator */
+.container .checkmark-hyphen:after {
   content: "";
   position: absolute;
   left: 7px;
@@ -128,9 +128,9 @@
   display: block;
 }
 
-.container4 .checkmarkcom:after,
-.container5 .checkmarkcom:after,
-.container6 .checkmarkreverse:after {
+.container4 .checkmark-com:after,
+.container5 .checkmark-com:after,
+.container6 .checkmark-reverse:after {
   content: "com";
   position: absolute;
   left: 7px;
@@ -140,11 +140,11 @@
   display: block;
   color: #fff;
 }
-.container5 .checkmarkcom:after {
+.container5 .checkmark-com:after {
   content: "co.uk";
 }
 
-.container6 .checkmarkreverse:after {
+.container6 .checkmark-reverse:after {
     content: "reverse";
 }
 
@@ -349,8 +349,8 @@ header {
 
 
 
-.row1,
-.row2 {
+.col1,
+.col2 {
   text-align: center;
   width: 260px;
 }
