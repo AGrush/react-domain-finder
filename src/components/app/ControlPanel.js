@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 import WordsContainer from './ControlPanel/WordsContainer'
 import Option from './ControlPanel/Option'
 import { max_number } from '../helpers'
+import Results from './Results'
+
+// var whois = require('whois')
+// whois.lookup('google.com', function(err, data) {
+//   console.log(data)
+// })
 
 export default class ControlPanel extends Component {
   state = {
@@ -105,19 +111,37 @@ export default class ControlPanel extends Component {
 
   processForm = (e) => {
     e.preventDefault();
-
     console.log('submit form')
+
+    const {options, words } = this.state;
+
+    //const tests = [];
+
+    // words.map(word => {
+    //   tests.push(word.word)
+    // })
+
+    
+
+    let tests = ['yanglin.me', 'nomatchdomain.com', 'notfounddomain.me', 'nic.ba', 'nic.es', 'nic.ke']
+
+    // Promise
+    //   .all(tests.map(domain => WhoIsApi.submit(domain)))
+    //   .then(results => console.log(results))
+    //   .catch(e => console.log(e))
   }
 
 
   render() {
+    // eslint-disable-next-line
     const firstColWords = this.state.words.filter(word => word.column == 1)
-
+    // eslint-disable-next-line
     const secondColWords = this.state.words.filter(word => word.column == 2)
 
     //console.log(secondColWords)
 
     return (
+      <React.Fragment>
       <form id="form1" method="post" onSubmit={this.processForm}>
         <div className="wrapper">
             <WordsContainer 
@@ -171,8 +195,10 @@ export default class ControlPanel extends Component {
             </div>
         </div>
         <input id="clickMe2" type="image" alt="search button" src="https://img.icons8.com/plasticine/100/000000/search.png"></input>
-    </form>
-      
+      </form>
+
+      <Results />
+      </React.Fragment>
     )
   }
 }
