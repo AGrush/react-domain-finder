@@ -5,18 +5,29 @@ import { max_number } from '../helpers'
 import Results from './Results'
 import axios from 'axios'
 
+window.onload = function(){
+  document.getElementById("1").value = "googl";
+  document.getElementById("2").value = "er";
+  document.getElementById("3").value = "ist";
+  document.getElementById("clickMe2").click();
+}
 
 export default class ControlPanel extends Component {
   state = {
     words: [
       { 
-        word: "",
+        word: "googl",
         id: 1,
         column: 1
       },
       { 
-        word: "",
+        word: "er",
         id: 2,
+        column: 2
+      },
+      { 
+        word: "ist",
+        id: 3,
         column: 2
       }
     ],
@@ -27,7 +38,7 @@ export default class ControlPanel extends Component {
       },
       {
         name: "couk",
-        status: false
+        status: true
       },
       {
         name: "hyphen",
@@ -106,13 +117,6 @@ export default class ControlPanel extends Component {
 
     this.setState ({ options: newOptions})
   }
-
-  fetchResponseAsync(FINAL_URLS) {
-    Promise
-      .all(FINAL_URLS.map(domain => axios.get(domain)))
-      .then(results => console.log(results))
-      .catch(e => console.log(e.message))
-  };
 
   //combine all the inputted words in every way that user selected
   combineWords() {
@@ -196,12 +200,70 @@ export default class ControlPanel extends Component {
    return combinedArr;
   }
 
+  printResults = (results) => {
+    //clear div
+    document.querySelector('#availableDomains').innerHTML = '';
+
+    results.forEach(result=>{
+      const string = result.toString()
+      console.log(string)
+      
+      //.COM
+      if (string.includes('Domain Name')) {
+        const newDiv = document.createElement('div')
+        newDiv.classList.add('res')
+        newDiv.classList.add('dontexist')
+        document.querySelector('#availableDomains').appendChild(newDiv)
+        console.log('stringggggggg =========== ' + string + ' ============')
+        const domain = string.split('Domain Name: ')[1].split('Registry Domain ID:')[0]; 
+        newDiv.innerHTML = `<span>${domain}</span>`
+      } 
+      
+      if (string.includes('No match for')) {
+        const newDiv = document.createElement('div')
+        newDiv.classList.add('res')
+        newDiv.classList.add('exist')
+        document.querySelector('#availableDomains').appendChild(newDiv)
+        console.log('stringggggggg =========== ' + string + ' ============')
+        const domainName = string.split('No match for "')[1].split('"')[0];
+        newDiv.innerHTML = `<span>${domainName}</span>`
+      } 
+
+      //.CO.UK
+      if (string.includes('was able to match')) {
+        const newDiv = document.createElement('div')
+        newDiv.classList.add('res')
+        newDiv.classList.add('dontexist')
+        document.querySelector('#availableDomains').appendChild(newDiv)
+        console.log('stringggggggg =========== ' + string + ' ============')
+        const domainName = string.split('Domain name:')[1].split('Data validation:')[0];
+        newDiv.innerHTML = `<span>${domainName}</span>`
+      } 
+    })
+  }
+
+  fetchResponseAsync(FINAL_URLS) {
+    const allDomains = [];
+
+    Promise
+      .all(FINAL_URLS.map(domain => axios.get(domain)))
+      .then(results => {
+        results.forEach(result => {
+          allDomains.push(result.data)
+        })
+
+        return allDomains;
+      })
+      .then(allDomains => this.printResults(allDomains))
+      .catch(e => console.log(e.message))
+  };
+
   processForm = (e) => {
     e.preventDefault();
 
     const urls = this.combineWords();
 
-    console.log(urls)
+    //console.log(urls)
     //attach to my server call
     const FINAL_URLS = urls.map(url => {return 'https://ag-domain-finder.herokuapp.com/domainfinder/domain/' + url})
 
@@ -253,13 +315,13 @@ export default class ControlPanel extends Component {
             <div className="wrapper-options">
               <Option 
                 onOptionClick={this.onOptionClick}
-                optionRequired={true}
                 className="container4"
                 optionType="checkmark-com"
                 name="com"
               />
               <Option 
                 onOptionClick={this.onOptionClick}
+                optionChecked={true}
                 className="container5"
                 optionType="checkmark-com"
                 name="couk"
