@@ -3,11 +3,8 @@ import WordsContainer from './ControlPanel/WordsContainer'
 import Option from './ControlPanel/Option'
 import { max_number } from '../helpers'
 import Results from './Results'
+import axios from 'axios'
 
-// var whois = require('whois')
-// whois.lookup('google.com', function(err, data) {
-//   console.log(data)
-// })
 
 export default class ControlPanel extends Component {
   state = {
@@ -89,6 +86,8 @@ export default class ControlPanel extends Component {
     })
 
     //console.log(newWords)
+
+    //TODO spread prev state, this.setState({...this.state, isFetching: true});
     this.setState ({ words: newWords})
   } 
 
@@ -108,29 +107,107 @@ export default class ControlPanel extends Component {
     this.setState ({ options: newOptions})
   }
 
+  fetchResponseAsync(FINAL_URLS) {
+    Promise
+      .all(FINAL_URLS.map(domain => axios.get(domain)))
+      .then(results => console.log(results))
+      .catch(e => console.log(e.message))
+  };
+
+  //combine all the inputted words in every way that user selected
+  combineWords() {
+    const { words, options } = this.state
+    let arrOne = []
+    let arrTwo = []
+    let domain = []
+    let hyphen = false;
+    let reverse = false;
+    let combinedArr = [];
+  
+
+    words.forEach(word => {
+      if (word.column == 1){
+        arrOne.push(word.word)
+      } else 
+      if (word.column == 2) {
+        arrTwo.push(word.word)
+      }
+    })
+
+    options.forEach(option => {
+      switch(option.name) {
+        case "com":
+          if(option.status === true){
+            domain.push('.com');
+          }
+        break;
+        case "couk":
+          if(option.status === true){
+            domain.push('.co.uk');
+          }
+        break;
+        case "hyphen":
+          if(option.status === true){
+            hyphen = true;
+          }
+        break;
+        case "reverse":
+          if(option.status === true){
+            reverse = true;
+          }
+        break;
+      }
+    })
+    
+    // console.log('domain =' + domain)
+    // console.log('hyphen =' + hyphen)
+    // console.log('reverse =' + reverse)
+
+    //combine first word array with second word array in every possible way FORWARDS
+    for (var i = 0; i < arrOne.length; i++) {
+        for (var j = 0; j < arrTwo.length; j++) {
+            //for each type of domain, so .co.uk and .com FORWARDS
+            domain.forEach(dom => {
+                combinedArr.push(arrOne[i].concat(arrTwo[j]) + dom);
+                if (hyphen) {
+                    combinedArr.push((arrOne[i] + '-').concat(arrTwo[j]) + dom);
+                }
+            })
+        }
+    }
+
+    if(reverse) {
+        //combine first word array with second word array in every possible way BACKWARDS
+        for (var ii = 0; ii < arrOne.length; ii++) {
+            for (var jj = 0; jj < arrTwo.length; jj++) {
+                //for each type of domain, so .co.uk and .com BACKWARDS
+                domain.forEach(dom => {
+                    combinedArr.push(arrTwo[jj].concat(arrOne[ii]) + dom);
+                    if (hyphen) {
+                        combinedArr.push((arrTwo[jj] + '-').concat(arrOne[ii]) + dom);
+                    }
+                })
+            }
+        }
+    }
+
+    //console.log('dcombinedArr =' + combinedArr)
+
+   return combinedArr;
+  }
 
   processForm = (e) => {
     e.preventDefault();
-    console.log('submit form')
 
-    const {options, words } = this.state;
+    const urls = this.combineWords();
 
-    //const tests = [];
+    console.log(urls)
+    //attach to my server call
+    const FINAL_URLS = urls.map(url => {return 'https://ag-domain-finder.herokuapp.com/domainfinder/domain/' + url})
 
-    // words.map(word => {
-    //   tests.push(word.word)
-    // })
-
-    
-
-    let tests = ['yanglin.me', 'nomatchdomain.com', 'notfounddomain.me', 'nic.ba', 'nic.es', 'nic.ke']
-
-    // Promise
-    //   .all(tests.map(domain => WhoIsApi.submit(domain)))
-    //   .then(results => console.log(results))
-    //   .catch(e => console.log(e))
+    //run all at once with promise.all
+    this.fetchResponseAsync(FINAL_URLS);
   }
-
 
   render() {
     // eslint-disable-next-line
@@ -176,6 +253,7 @@ export default class ControlPanel extends Component {
             <div className="wrapper-options">
               <Option 
                 onOptionClick={this.onOptionClick}
+                optionRequired={true}
                 className="container4"
                 optionType="checkmark-com"
                 name="com"
