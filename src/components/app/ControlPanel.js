@@ -5,29 +5,24 @@ import { max_number } from '../helpers'
 import Results from './Results'
 import axios from 'axios'
 
-window.onload = function(){
-  document.getElementById("1").value = "googl";
-  document.getElementById("2").value = "er";
-  document.getElementById("3").value = "ist";
-  document.getElementById("clickMe2").click();
-}
+// window.onload = function(){
+//   document.getElementById("1").value = "googl";
+//   document.getElementById("2").value = "er";
+//   document.getElementById("3").value = "ist";
+//   document.getElementById("clickMe2").click();
+// }
 
 export default class ControlPanel extends Component {
   state = {
     words: [
       { 
-        word: "googl",
+        word: "",
         id: 1,
         column: 1
       },
       { 
-        word: "er",
+        word: "",
         id: 2,
-        column: 2
-      },
-      { 
-        word: "ist",
-        id: 3,
         column: 2
       }
     ],
@@ -130,9 +125,11 @@ export default class ControlPanel extends Component {
   
 
     words.forEach(word => {
+      // eslint-disable-next-line
       if (word.column == 1){
         arrOne.push(word.word)
       } else 
+      // eslint-disable-next-line
       if (word.column == 2) {
         arrTwo.push(word.word)
       }
@@ -160,6 +157,7 @@ export default class ControlPanel extends Component {
             reverse = true;
           }
         break;
+        default: break;
       }
     })
     
@@ -168,9 +166,10 @@ export default class ControlPanel extends Component {
     // console.log('reverse =' + reverse)
 
     //combine first word array with second word array in every possible way FORWARDS
-    for (var i = 0; i < arrOne.length; i++) {
-        for (var j = 0; j < arrTwo.length; j++) {
+    for (let i = 0; i < arrOne.length; i++) {
+        for (let j = 0; j < arrTwo.length; j++) {
             //for each type of domain, so .co.uk and .com FORWARDS
+            // eslint-disable-next-line
             domain.forEach(dom => {
                 combinedArr.push(arrOne[i].concat(arrTwo[j]) + dom);
                 if (hyphen) {
@@ -182,9 +181,10 @@ export default class ControlPanel extends Component {
 
     if(reverse) {
         //combine first word array with second word array in every possible way BACKWARDS
-        for (var ii = 0; ii < arrOne.length; ii++) {
-            for (var jj = 0; jj < arrTwo.length; jj++) {
+        for (let ii = 0; ii < arrOne.length; ii++) {
+            for (let jj = 0; jj < arrTwo.length; jj++) {
                 //for each type of domain, so .co.uk and .com BACKWARDS
+                // eslint-disable-next-line
                 domain.forEach(dom => {
                     combinedArr.push(arrTwo[jj].concat(arrOne[ii]) + dom);
                     if (hyphen) {
@@ -206,7 +206,7 @@ export default class ControlPanel extends Component {
 
     results.forEach(result=>{
       const string = result.toString()
-      console.log(string)
+      //console.log(string)
       
       //.COM
       if (string.includes('Domain Name')) {
@@ -214,7 +214,7 @@ export default class ControlPanel extends Component {
         newDiv.classList.add('res')
         newDiv.classList.add('dontexist')
         document.querySelector('#availableDomains').appendChild(newDiv)
-        console.log('stringggggggg =========== ' + string + ' ============')
+        //console.log('stringggggggg =========== ' + string + ' ============')
         const domain = string.split('Domain Name: ')[1].split('Registry Domain ID:')[0]; 
         newDiv.innerHTML = `<span>${domain}</span>`
       } 
@@ -224,7 +224,7 @@ export default class ControlPanel extends Component {
         newDiv.classList.add('res')
         newDiv.classList.add('exist')
         document.querySelector('#availableDomains').appendChild(newDiv)
-        console.log('stringggggggg =========== ' + string + ' ============')
+        //console.log('stringggggggg =========== ' + string + ' ============')
         const domainName = string.split('No match for "')[1].split('"')[0];
         newDiv.innerHTML = `<span>${domainName}</span>`
       } 
@@ -235,7 +235,7 @@ export default class ControlPanel extends Component {
         newDiv.classList.add('res')
         newDiv.classList.add('dontexist')
         document.querySelector('#availableDomains').appendChild(newDiv)
-        console.log('stringggggggg =========== ' + string + ' ============')
+        //console.log('stringggggggg =========== ' + string + ' ============')
         const domainName = string.split('Domain name:')[1].split('Data validation:')[0];
         newDiv.innerHTML = `<span>${domainName}</span>`
       } 
