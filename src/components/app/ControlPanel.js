@@ -113,7 +113,6 @@ export default class ControlPanel extends Component {
     this.setState ({ options: newOptions})
   }
 
-  //combine all the inputted words in every way that user selected
   combineWords() {
     const { words, options } = this.state
     let arrOne = []
