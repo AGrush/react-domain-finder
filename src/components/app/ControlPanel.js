@@ -85,6 +85,7 @@ export default class ControlPanel extends Component {
       // eslint-disable-next-line
       if(word.id == e.target.id){
         //console.log(e.target.id, word.id);
+        //TODO SPREAD OPERATOR STATE
         newWords.push( {"word" : e.target.value, "id" : word.id, column:columnId} ) 
       } else {
         newWords.push( {"word" : word.word, "id" : word.id, column: word.column} ) 
@@ -101,6 +102,8 @@ export default class ControlPanel extends Component {
     const { options } = this.state;
 
     const newOptions = []
+
+    //TODO SPREAD OPERATOR STATE
 
     options.map(option => {
       if(option.name === name){
@@ -230,6 +233,7 @@ export default class ControlPanel extends Component {
 
       //.CO.UK
       if (string.includes('was able to match')) {
+        
         const newDiv = document.createElement('div')
         newDiv.classList.add('res')
         newDiv.classList.add('dontexist')
@@ -237,15 +241,34 @@ export default class ControlPanel extends Component {
         //console.log('stringggggggg =========== ' + string + ' ============')
         const domainName = string.split('Domain name:')[1].split('Data validation:')[0];
         newDiv.innerHTML = `<span>${domainName}</span>`
+        //this.setState=({...state, domain = domainName, taken = 0})
       } 
     })
   }
 
-  fetchResponseAsync(FINAL_URLS) {
+  fetchSynonymns = (word) => {
+    const url = 'https://ag-domain-finder.herokuapp.com/domainfinder/synonyms/' + word;
+    let synonymns = [];
+
+    axios.get(url)
+      .then(results => {
+        let roughResults = results.data.toString().split(',')
+        roughResults.forEach(result => {
+          //we don't want multi word synonymns
+          if(result.split(' ')[1] == undefined){
+            synonymns.push(result)
+          }
+        })
+        console.log(synonymns)
+      })
+      .catch(e => console.log(e.message));
+  }
+
+  fetchResponseAsync(final_urls) {
     const allDomains = [];
 
     Promise
-      .all(FINAL_URLS.map(domain => axios.get(domain)))
+      .all(final_urls.map(url => axios.get(url)))
       .then(results => {
         results.forEach(result => {
           allDomains.push(result.data)
@@ -264,10 +287,11 @@ export default class ControlPanel extends Component {
 
     //console.log(urls)
     //attach to my server call
-    const FINAL_URLS = urls.map(url => {return 'https://ag-domain-finder.herokuapp.com/domainfinder/domain/' + url})
+    const final_urls = urls.map(url => {return 'https://ag-domain-finder.herokuapp.com/domainfinder/domain/' + url})
 
     //run all at once with promise.all
-    this.fetchResponseAsync(FINAL_URLS);
+    this.fetchResponseAsync(final_urls);
+    this.fetchSynonymns('true')
   }
 
   render() {
