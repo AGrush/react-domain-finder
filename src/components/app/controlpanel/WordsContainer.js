@@ -4,7 +4,6 @@ import Word from './Word'
 export default class WordsContainer extends Component {
   render() {
     const wordList = this.props.words.map(word => {
-      //if word is for column 1 (columnID == 1), return the words with colmnId of 1
       return (
         <Word 
           key={word.id} 

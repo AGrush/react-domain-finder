@@ -14,36 +14,27 @@ import axios from 'axios'
 
 export default class ControlPanel extends Component {
   state = {
-    words: [
+    words: 
+    [
       { 
         word: "",
         id: 1,
-        column: 1
+        column: 1,
+        synonymns: ""
       },
       { 
         word: "",
         id: 2,
-        column: 2
+        column: 2,
+        synonymns: ""
       }
     ],
-    options: [
-      {
-        name: "com",
-        status: false
-      },
-      {
-        name: "couk",
-        status: true
-      },
-      {
-        name: "hyphen",
-        status: false
-      },
-      {
-        name: "reverse",
-        status: false
-      }
-    ]
+    options: {
+      com: false,
+      couk: false,
+      hyphen: false,
+      reverse: false
+    }
   }
 
   onRemoveWord = id => {
@@ -71,7 +62,7 @@ export default class ControlPanel extends Component {
     //words.push({ word: "", id: max_id+1, column:id})
 
     //set global words state object = to the local word object OR spread it in:
-    this.setState ({ words: [...this.state.words, { word: "", id: max_id+1, column:id }]})
+    this.setState ({ words: [...words, { word: "", id: max_id+1, column:id, synonymns: "" }]})
   }
 
   onChangeWord = (columnId, e) => {
@@ -86,34 +77,25 @@ export default class ControlPanel extends Component {
       if(word.id == e.target.id){
         //console.log(e.target.id, word.id);
         //TODO SPREAD OPERATOR STATE
-        newWords.push( {"word" : e.target.value, "id" : word.id, column:columnId} ) 
+        newWords.push( {word : e.target.value, "id" : word.id, column:columnId, synonymns: } ) 
       } else {
-        newWords.push( {"word" : word.word, "id" : word.id, column: word.column} ) 
+        newWords.push( {word : word.word, "id" : word.id, column: word.column} ) 
       } return null;
     })
 
-    //console.log(newWords)
+    this.setState ({words: newWords})
 
     //TODO spread prev state, this.setState({...this.state, isFetching: true});
-    this.setState ({words: newWords})
+    // const newWords = {words: [...words, { word: e.target.value, id: [e.target.id], column: columnId}]}
+    // console.log(newWords)
   } 
 
-  onOptionClick = (name, e) => {
+  onOptionClick = (name, optionChecked) => {
     const { options } = this.state;
 
-    const newOptions = []
-
-    //TODO SPREAD OPERATOR STATE
-
-    options.forEach(option => {
-      if(option.name === name){
-        newOptions.push( { "name": option.name, "status": !option.status } )
-      } else {
-        newOptions.push( { "name": option.name, "status": option.status } )
-      } return null;
-    })
-
-    this.setState ({ options: newOptions})
+    const newOptions = { ...options, [name]: !optionChecked}
+    
+    this.setState ({options: newOptions})
   }
 
   combineWords() {
@@ -121,8 +103,6 @@ export default class ControlPanel extends Component {
     let arrOne = []
     let arrTwo = []
     let domain = []
-    let hyphen = false;
-    let reverse = false;
     let combinedArr = [];
   
 
@@ -130,42 +110,19 @@ export default class ControlPanel extends Component {
       // eslint-disable-next-line
       if (word.column == 1){
         arrOne.push(word.word)
-      } else 
+      } else
       // eslint-disable-next-line
       if (word.column == 2) {
         arrTwo.push(word.word)
       }
     })
 
-    options.forEach(option => {
-      switch(option.name) {
-        case "com":
-          if(option.status === true){
-            domain.push('.com');
-          }
-        break;
-        case "couk":
-          if(option.status === true){
-            domain.push('.co.uk');
-          }
-        break;
-        case "hyphen":
-          if(option.status === true){
-            hyphen = true;
-          }
-        break;
-        case "reverse":
-          if(option.status === true){
-            reverse = true;
-          }
-        break;
-        default: break;
-      }
-    })
-    
-    // console.log('domain =' + domain)
-    // console.log('hyphen =' + hyphen)
-    // console.log('reverse =' + reverse)
+    if(options.com === true) {
+      domain.push('.com');
+    }
+    if(options.couk === true){
+      domain.push('.co.uk');
+    }
 
     //combine first word array with second word array in every possible way FORWARDS
     for (let i = 0; i < arrOne.length; i++) {
@@ -174,14 +131,14 @@ export default class ControlPanel extends Component {
             // eslint-disable-next-line
             domain.forEach(dom => {
                 combinedArr.push(arrOne[i].concat(arrTwo[j]) + dom);
-                if (hyphen) {
+                if (options.hyphen) {
                     combinedArr.push((arrOne[i] + '-').concat(arrTwo[j]) + dom);
                 }
             })
         }
     }
 
-    if(reverse) {
+    if(options.reverse) {
         //combine first word array with second word array in every possible way BACKWARDS
         for (let ii = 0; ii < arrOne.length; ii++) {
             for (let jj = 0; jj < arrTwo.length; jj++) {
@@ -189,7 +146,7 @@ export default class ControlPanel extends Component {
                 // eslint-disable-next-line
                 domain.forEach(dom => {
                     combinedArr.push(arrTwo[jj].concat(arrOne[ii]) + dom);
-                    if (hyphen) {
+                    if (options.hyphen) {
                         combinedArr.push((arrTwo[jj] + '-').concat(arrOne[ii]) + dom);
                     }
                 })
@@ -319,6 +276,7 @@ export default class ControlPanel extends Component {
 
             <Option 
               onOptionClick={this.onOptionClick}
+              optionChecked={this.state.options.hyphen}
               className="container"
               optionType="checkmark-hyphen"
               name="hyphen"
@@ -338,19 +296,21 @@ export default class ControlPanel extends Component {
             <div className="wrapper-options">
               <Option 
                 onOptionClick={this.onOptionClick}
+                optionChecked={this.state.options.com}
                 className="container4"
                 optionType="checkmark-com"
                 name="com"
               />
               <Option 
                 onOptionClick={this.onOptionClick}
-                optionChecked={true}
+                optionChecked={this.state.options.couk}
                 className="container5"
                 optionType="checkmark-com"
                 name="couk"
               />
               <Option 
                 onOptionClick={this.onOptionClick}
+                optionChecked={this.state.options.reverse}
                 className="container6"
                 optionType="checkmark-reverse"
                 name="reverse"
