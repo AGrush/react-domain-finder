@@ -68,10 +68,10 @@ export default class ControlPanel extends Component {
     const max_id = max_number(ids)
 
     //add word to the local words array
-    words.push({ word: "", id: max_id+1, column:id})
+    //words.push({ word: "", id: max_id+1, column:id})
 
-    //set global words state object = to the local word object
-    this.setState ({ words: words})
+    //set global words state object = to the local word object OR spread it in:
+    this.setState ({ words: [...this.state.words, { word: "", id: max_id+1, column:id }]})
   }
 
   onChangeWord = (columnId, e) => {
@@ -95,7 +95,7 @@ export default class ControlPanel extends Component {
     //console.log(newWords)
 
     //TODO spread prev state, this.setState({...this.state, isFetching: true});
-    this.setState ({ words: newWords})
+    this.setState ({words: newWords})
   } 
 
   onOptionClick = (name, e) => {
@@ -105,7 +105,7 @@ export default class ControlPanel extends Component {
 
     //TODO SPREAD OPERATOR STATE
 
-    options.map(option => {
+    options.forEach(option => {
       if(option.name === name){
         newOptions.push( { "name": option.name, "status": !option.status } )
       } else {
@@ -255,7 +255,7 @@ export default class ControlPanel extends Component {
         let roughResults = results.data.toString().split(',')
         roughResults.forEach(result => {
           //we don't want multi word synonymns
-          if(result.split(' ')[1] == undefined){
+          if(result.split(' ')[1] === undefined){
             synonymns.push(result)
           }
         })
