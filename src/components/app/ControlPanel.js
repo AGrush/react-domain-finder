@@ -20,13 +20,19 @@ export default class ControlPanel extends Component {
         word: "",
         id: 1,
         column: 1,
-        synonymns: ""
+        synonymns: {
+          all:[],
+          selected:[]
+        }
       },
       { 
         word: "",
         id: 2,
         column: 2,
-        synonymns: ""
+        synonymns: {
+          all:[],
+          selected: []
+        }
       }
     ],
     options: {
@@ -62,7 +68,7 @@ export default class ControlPanel extends Component {
     //words.push({ word: "", id: max_id+1, column:id})
 
     //set global words state object = to the local word object OR spread it in:
-    this.setState ({ words: [...words, { word: "", id: max_id+1, column:id, synonymns: "" }]})
+    this.setState ({ words: [...words, { word: "", id: max_id+1, column:id, synonymns: {all:[], selected:[]} }]})
   }
 
   onChangeWord = (columnId, e) => {
