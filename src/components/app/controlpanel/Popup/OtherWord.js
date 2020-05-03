@@ -3,9 +3,10 @@ import React from 'react'
 const OtherWord = ({otherWord, wordId, selectOtherWord}) => {
 
   return (
-    <button onClick={() => {selectOtherWord(otherWord, wordId)}} >
-      {otherWord}
-    </button>
+    <label className="label-otherword">
+      <input type="checkbox" onChange={()=>{selectOtherWord(otherWord, wordId)}}/>
+      <span className="checkmark-otherword">{otherWord}</span>
+    </label>
   )
 }
 

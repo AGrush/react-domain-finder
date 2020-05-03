@@ -4,6 +4,7 @@ import Word from './Word'
 export default class WordsContainer extends Component {
   render() {
     const wordList = this.props.words.map(word => {
+      const synonymnsSelected = word.synonymns.selected[0]
       return (
         <Word 
           key={word.id} 
@@ -13,6 +14,7 @@ export default class WordsContainer extends Component {
           onRemoveWord={this.props.onRemoveWord} 
           onChangeWord={this.props.onChangeWord}
           onClickSynonymnBtn={this.props.onClickSynonymnBtn}
+          synonymnsSelected={synonymnsSelected || false}
         />
       )
     })

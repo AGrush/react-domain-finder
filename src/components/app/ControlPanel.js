@@ -351,7 +351,6 @@ export default class ControlPanel extends Component {
     if(typeof synonymnExist[0] !== 'undefined'){showPopup=true}
  
     // console.log(showPopup)
-
     return (
       <React.Fragment>
       <form id="form1" method="post" onSubmit={this.processForm}>
@@ -371,7 +370,7 @@ export default class ControlPanel extends Component {
             <Option 
               onOptionClick={this.onOptionClick}
               optionChecked={this.state.options.hyphen}
-              className="container"
+              className="label-hyphen"
               optionType="checkmark-hyphen"
               name="hyphen"
             />
@@ -392,21 +391,21 @@ export default class ControlPanel extends Component {
               <Option 
                 onOptionClick={this.onOptionClick}
                 optionChecked={this.state.options.com}
-                className="container4"
+                className="label-com"
                 optionType="checkmark-com"
                 name="com"
               />
               <Option 
                 onOptionClick={this.onOptionClick}
                 optionChecked={this.state.options.couk}
-                className="container5"
+                className="label-couk"
                 optionType="checkmark-com"
                 name="couk"
               />
               <Option 
                 onOptionClick={this.onOptionClick}
                 optionChecked={this.state.options.reverse}
-                className="container6"
+                className="label-reverse"
                 optionType="checkmark-reverse"
                 name="reverse"
               />
