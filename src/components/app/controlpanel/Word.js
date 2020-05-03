@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Word = ({onRemoveWord, wordId, onChangeWord, columnId}) => {
+const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn}) => {
   return (
     <div>
        <input 
@@ -12,6 +12,13 @@ const Word = ({onRemoveWord, wordId, onChangeWord, columnId}) => {
           onChange={(e) => onChangeWord(columnId, e)} 
         /> 
         <span onClick={() => {onRemoveWord(wordId)}} className="deletebtn">-</span>
+
+        {/* <label className={className}>
+          <input name={name} type="checkbox" checked={optionChecked} onChange={()=>{onOptionClick(name, optionChecked)}}/>
+          <span className={optionType}></span>
+        </label> */}
+
+        <button onClick={() => {onClickSynonymnBtn(wordId)}} className="synonymnbtn">s</button>
     </div>
   )
 }

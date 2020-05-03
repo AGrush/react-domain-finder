@@ -3,43 +3,50 @@ import WordsContainer from './ControlPanel/WordsContainer'
 import Option from './ControlPanel/Option'
 import { max_number } from '../helpers'
 import Results from './Results'
+import Popup from './ControlPanel/Popup'
 import axios from 'axios'
 
-// window.onload = function(){
-//   document.getElementById("1").value = "googl";
-//   document.getElementById("2").value = "er";
-//   document.getElementById("3").value = "ist";
-//   document.getElementById("clickMe2").click();
-// }
+
+window.onload = function(){
+  document.getElementById("1").value = "dog";
+  document.getElementById("2").value = "good";
+  //document.querySelector('.synonymnbtn').click();
+}
 
 export default class ControlPanel extends Component {
   state = {
     words: 
     [
       { 
-        word: "",
+        word: "dog",
         id: 1,
         column: 1,
         synonymns: {
           all:[],
-          selected:[]
+          selected:[],
+          noneFound: false
         }
       },
       { 
-        word: "",
+        word: "good",
         id: 2,
         column: 2,
         synonymns: {
           all:[],
-          selected: []
+          selected: [],
+          noneFound: false
         }
       }
     ],
     options: {
-      com: false,
+      com: true,
       couk: false,
       hyphen: false,
       reverse: false
+    },
+    popup: {
+      wordId: undefined,
+      otherWords: []
     }
   }
 
@@ -73,27 +80,17 @@ export default class ControlPanel extends Component {
 
   onChangeWord = (columnId, e) => {
     //console.log(columnId, e.target.id, e.target.value, [e.target.name]);
+    const { words } = this.state
 
-    const { words} = this.state
-
-    const newWords = []
-
-    words.map(word => {
-      // eslint-disable-next-line
+    const newWords = words.map(word => {
       if(word.id == e.target.id){
-        //console.log(e.target.id, word.id);
-        //TODO SPREAD OPERATOR STATE
-        newWords.push( {word : e.target.value, "id" : word.id, column:columnId, synonymns: } ) 
+        return {...word, word: e.target.value, column: columnId } 
       } else {
-        newWords.push( {word : word.word, "id" : word.id, column: word.column} ) 
-      } return null;
+        return word
+      } 
     })
 
     this.setState ({words: newWords})
-
-    //TODO spread prev state, this.setState({...this.state, isFetching: true});
-    // const newWords = {words: [...words, { word: e.target.value, id: [e.target.id], column: columnId}]}
-    // console.log(newWords)
   } 
 
   onOptionClick = (name, optionChecked) => {
@@ -110,18 +107,24 @@ export default class ControlPanel extends Component {
     let arrTwo = []
     let domain = []
     let combinedArr = [];
-  
 
     words.forEach(word => {
       // eslint-disable-next-line
       if (word.column == 1){
         arrOne.push(word.word)
+        arrOne = arrOne.concat(word.synonymns.selected)
       } else
       // eslint-disable-next-line
       if (word.column == 2) {
         arrTwo.push(word.word)
+        // console.log(arrTwo)
+        // console.log(word.synonymns.selected)
+        arrTwo = arrTwo.concat(word.synonymns.selected)
+        // console.log(arrTwo)
       }
     })
+
+    //console.log(arrTwo)
 
     if(options.com === true) {
       domain.push('.com');
@@ -160,7 +163,7 @@ export default class ControlPanel extends Component {
         }
     }
 
-    //console.log('dcombinedArr =' + combinedArr)
+    //console.log('combinedArr =' + combinedArr)
 
    return combinedArr;
   }
@@ -209,22 +212,101 @@ export default class ControlPanel extends Component {
     })
   }
 
-  fetchSynonymns = (word) => {
+  onClickSynonymnBtn = (wordId) => {
+    const { words } = this.state
+
+    //console.log(wordId)
+
+    let theWord = ''
+    
+    words.map(word => {
+      if(word.id === wordId){
+        theWord = word.word
+      }
+    })
+
+    //console.log(theWord)
+
+    this.fetchSynonymns(theWord)
+      .then(data => this.updateSynonymnState(wordId, data))
+  }
+
+  updateSynonymnState = (wordId, wordSynonymns) => {
+    const { words, popup } = this.state
+
+    const newWords = words.map(word => {
+      // eslint-disable-next-line
+      if(word.id == wordId){
+        //TODO: potentially use Immer, immutability-helper, immutable-js
+        return {...word, synonymns: { ...word.synonymns, all: wordSynonymns }} 
+      } else {
+        return word
+      } 
+    })
+
+    this.setState ({words: newWords, popup: {otherWords: wordSynonymns, wordId: wordId}})
+  }
+
+  selectOtherWord = (otherWord, wordId) => {
+    const { words} = this.state
+
+    //find old synonymns
+    let oldSelectedSynonymns = []
+    words.forEach(word=>{if(word.id===wordId){oldSelectedSynonymns = word.synonymns.selected}})
+
+
+    //get combined synonymns if the new word doesnt exist
+    let newSelectedSynonymns = '';
+    if(!oldSelectedSynonymns.includes(otherWord)){
+      newSelectedSynonymns = oldSelectedSynonymns.concat(otherWord)
+    } else {
+      newSelectedSynonymns = oldSelectedSynonymns.filter(word => word !== otherWord)
+    }
+
+    // console.log(oldSelectedSynonymns)
+    // console.log(newSelectedSynonymns)
+
+    const newWords = words.map(word => {
+      // eslint-disable-next-line
+      if(word.id == wordId){
+        //TODO: potentially use Immer, immutability-helper, immutable-js
+        return {...word, synonymns: { ...word.synonymns, selected: newSelectedSynonymns }} 
+      } else {
+        return word
+      } 
+    })
+
+    this.setState ({words: newWords})
+  }
+
+  selectAllOtherWords = (otherWord, wordId) => {
+    /*
+      select all popup.otherWords and add them to word with wordId's synonymns selected array
+    */
+
+  }
+
+  updateStateOfSelectedOtherWords = (otherWord, wordId) => {
+    /*
+      add selected words to the 
+    */
+
+  }
+
+  fetchSynonymns = async(word) => {
     const url = 'https://ag-domain-finder.herokuapp.com/domainfinder/synonyms/' + word;
     let synonymns = [];
 
-    axios.get(url)
-      .then(results => {
-        let roughResults = results.data.toString().split(',')
-        roughResults.forEach(result => {
-          //we don't want multi word synonymns
-          if(result.split(' ')[1] === undefined){
-            synonymns.push(result)
-          }
-        })
-        console.log(synonymns)
-      })
-      .catch(e => console.log(e.message));
+    let res = await axios.get(url)
+    let roughResults = res.data.toString().split(',')
+    roughResults.forEach(result => {
+      //we don't want multi word synonymns
+      if(result.split(' ')[1] === undefined){
+        synonymns.push(result)
+      }
+    })
+
+    return synonymns;
   }
 
   fetchResponseAsync(final_urls) {
@@ -254,16 +336,21 @@ export default class ControlPanel extends Component {
 
     //run all at once with promise.all
     this.fetchResponseAsync(final_urls);
-    this.fetchSynonymns('true')
+    
   }
 
   render() {
+    const { words } = this.state
     // eslint-disable-next-line
-    const firstColWords = this.state.words.filter(word => word.column == 1)
+    const firstColWords = words.filter(word => word.column == 1)
     // eslint-disable-next-line
-    const secondColWords = this.state.words.filter(word => word.column == 2)
+    const secondColWords = words.filter(word => word.column == 2)
 
-    //console.log(secondColWords)
+    const synonymnExist = words.filter(word => word.synonymns.all.some(x => x.length > 0))
+    let showPopup = false
+    if(typeof synonymnExist[0] !== 'undefined'){showPopup=true}
+ 
+    // console.log(showPopup)
 
     return (
       <React.Fragment>
@@ -277,6 +364,7 @@ export default class ControlPanel extends Component {
               words={firstColWords}
               onRemoveWord={this.onRemoveWord} 
               onChangeWord={this.onChangeWord}
+              onClickSynonymnBtn={this.onClickSynonymnBtn}
               onAddWord={this.onAddWord}
             />
 
@@ -296,6 +384,7 @@ export default class ControlPanel extends Component {
               words={secondColWords}
               onRemoveWord={this.onRemoveWord} 
               onChangeWord={this.onChangeWord}
+              onClickSynonymnBtn={this.onClickSynonymnBtn}
               onAddWord={this.onAddWord}
             />
 
@@ -325,6 +414,15 @@ export default class ControlPanel extends Component {
         </div>
         <input id="clickMe2" type="image" alt="search button" src="https://img.icons8.com/plasticine/100/000000/search.png"></input>
       </form>
+    
+      <Popup 
+        showPopup={showPopup}
+        wordId={this.state.popup.wordId}
+        otherWords={this.state.popup.otherWords}
+        selectOtherWord={this.selectOtherWord}
+        selectAllOtherWords={this.selectAllOtherWords}
+        updateStateOfSelectedOtherWords={this.updateStateOfSelectedOtherWords}
+      />
 
       <Results />
       </React.Fragment>

@@ -12,6 +12,7 @@ export default class WordsContainer extends Component {
           columnId={this.props.columnId} 
           onRemoveWord={this.props.onRemoveWord} 
           onChangeWord={this.props.onChangeWord}
+          onClickSynonymnBtn={this.props.onClickSynonymnBtn}
         />
       )
     })
