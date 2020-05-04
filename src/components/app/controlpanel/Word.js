@@ -1,8 +1,7 @@
 import React from 'react'
 
-const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn, synonymnsSelected}) => {
-
-
+const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn, synonymnsSelected, synonymnsLoading}) => {
+  // console.log('f' + synonymnsSelected)
   return (
     <div>
        <input 
@@ -16,8 +15,8 @@ const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn,
         <span onClick={() => {onRemoveWord(wordId)}} className="deletebtn">-</span>
 
         <label className="label-synonymns">
-          <input type="checkbox" checked={synonymnsSelected} onChange={()=>{onClickSynonymnBtn(wordId, synonymnsSelected)}}/>
-          <span className="checkmark-synonymns"></span>
+          <input type="checkbox" checked={synonymnsSelected.toString()} onChange={()=>{onClickSynonymnBtn(wordId, synonymnsSelected)}}/>
+          <span className={`checkmark-synonymns loaded-${synonymnsLoading}`}></span>
         </label>
 
         {/* <button onClick={() => {onClickSynonymnBtn(wordId)}} className="synonymnbtn">s</button> */}

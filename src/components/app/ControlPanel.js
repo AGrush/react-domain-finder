@@ -21,9 +21,11 @@ export default class ControlPanel extends Component {
         word: "dog",
         id: 1,
         column: 1,
+        selected: false,
         synonymns: {
           all:[],
           selected:[],
+          loading: false,
           noneFound: false
         }
       },
@@ -31,9 +33,11 @@ export default class ControlPanel extends Component {
         word: "good",
         id: 2,
         column: 2,
+        selected: false,
         synonymns: {
           all:[],
           selected: [],
+          loading: false,
           noneFound: false
         }
       }
@@ -47,7 +51,8 @@ export default class ControlPanel extends Component {
     popup: {
       wordId: undefined,
       otherWords: [],
-      selectedOtherWords: []
+      selectedOtherWords: [],
+      showPopup: false
     }
   }
 
@@ -226,14 +231,27 @@ export default class ControlPanel extends Component {
       }
     })
 
-    //console.log(theWord)
-
-    this.fetchSynonymns(theWord)
+    if(theWord == ''){
+      alert('please enter a word');
+      return
+    } else {
+      this.fetchSynonymns(theWord, wordId)
       .then(data => this.updateSynonymnState(wordId, data, synonymnsSelected))
+      .catch(e => {console.log (e)});
+    }
+   
   }
 
   updateSynonymnState = (wordId, wordSynonymns, synonymnsSelected) => {
-    const { words, popup } = this.state
+    let { words, popup: { showPopup }} = this.state
+
+    if(wordSynonymns.length > 1){
+      showPopup=true
+    } else {
+      alert('no synonymns found')
+      showPopup=false
+    }
+    // console.log(showPopup)
 
     const newWords = words.map(word => {
       // eslint-disable-next-line
@@ -245,7 +263,7 @@ export default class ControlPanel extends Component {
       } 
     })
 
-    this.setState ({words: newWords, popup: {otherWords: wordSynonymns, wordId: wordId, selectedOtherWords: synonymnsSelected}})
+    this.setState ({words: newWords, popup: {otherWords: wordSynonymns, wordId: wordId, selectedOtherWords: synonymnsSelected, showPopup: showPopup}})
   }
 
   onSelectOtherWord = (otherWord, wordId) => {
@@ -294,7 +312,20 @@ export default class ControlPanel extends Component {
 
   }
 
-  fetchSynonymns = async(word) => {
+  fetchSynonymns = async(word, wordId) => {
+    const { words } = this.state
+
+    //set synonymn loading state
+    const newWords = words.map(word => {
+      // eslint-disable-next-line
+      if(word.id == wordId){
+        return {...word, synonymns: { ...word.synonymns, loading: true}} 
+      } else {
+        return word
+      } 
+    })
+    this.setState ({words: newWords})
+
     const url = 'https://ag-domain-finder.herokuapp.com/domainfinder/synonyms/' + word;
     let synonymns = [];
 
@@ -306,6 +337,17 @@ export default class ControlPanel extends Component {
         synonymns.push(result)
       }
     })
+
+    //set synonymn finished loading state
+    const newWords2 = words.map(word => {
+      // eslint-disable-next-line
+      if(word.id == wordId){
+        return {...word, synonymns: { ...word.synonymns, loading: false}} 
+      } else {
+        return word
+      } 
+    })
+    this.setState ({words: newWords2})
 
     return synonymns;
   }
@@ -326,7 +368,8 @@ export default class ControlPanel extends Component {
       .catch(e => console.log(e.message))
   };
 
-  processForm = (e) => {
+  onSubmitForm = (e) => {
+    let { popup } = this.state
     e.preventDefault();
 
     const urls = this.combineWords();
@@ -337,7 +380,7 @@ export default class ControlPanel extends Component {
 
     //run all at once with promise.all
     this.fetchResponseAsync(final_urls);
-    
+    this.setState({popup: {...popup, showPopup: false}})
   }
 
   render() {
@@ -346,21 +389,17 @@ export default class ControlPanel extends Component {
     const firstColWords = words.filter(word => word.column == 1)
     // eslint-disable-next-line
     const secondColWords = words.filter(word => word.column == 2)
-
-    const synonymnExist = words.filter(word => word.synonymns.all.some(x => x.length > 0))
-    let showPopup = false
-    if(typeof synonymnExist[0] !== 'undefined'){showPopup=true}
  
     // console.log(showPopup)
     return (
       <React.Fragment>
-      <form id="form1" method="post" onSubmit={this.processForm}>
+      <form id="form1" method="post" onSubmit={this.onSubmitForm}>
         <div className="wrapper">
             <WordsContainer 
               columnId="1" 
               class="col1"
               heading="first half"
-              processForm={this.processForm}
+              onSubmitForm={this.onSubmitForm}
               words={firstColWords}
               onRemoveWord={this.onRemoveWord} 
               onChangeWord={this.onChangeWord}
@@ -380,7 +419,7 @@ export default class ControlPanel extends Component {
               columnId="2" 
               class="col2"
               heading="second half"
-              processForm={this.processForm}
+              onSubmitForm={this.onSubmitForm}
               words={secondColWords}
               onRemoveWord={this.onRemoveWord} 
               onChangeWord={this.onChangeWord}
@@ -416,7 +455,7 @@ export default class ControlPanel extends Component {
       </form>
     
       <Popup 
-        showPopup={showPopup}
+        showPopup={this.state.popup.showPopup}
         wordId={this.state.popup.wordId}
         otherWords={this.state.popup.otherWords}
         selectedOtherWords={this.state.popup.selectedOtherWords}

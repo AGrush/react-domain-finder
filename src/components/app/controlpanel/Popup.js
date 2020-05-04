@@ -3,7 +3,7 @@ import OtherWord from './Popup/OtherWord'
 
 const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, updateStateOfSelectedOtherWords}) => {
   
-  //console.log(selectedOtherWords)
+  console.log(showPopup)
 
   const words = otherWords.map(word => {
     let otherWordSelected = false;

@@ -5,6 +5,7 @@ export default class WordsContainer extends Component {
   render() {
     const wordList = this.props.words.map(word => {
       const synonymnsSelected = word.synonymns.selected
+      // console.log(synonymnsSelected)
       return (
         <Word 
           key={word.id} 
@@ -15,6 +16,7 @@ export default class WordsContainer extends Component {
           onChangeWord={this.props.onChangeWord}
           onClickSynonymnBtn={this.props.onClickSynonymnBtn}
           synonymnsSelected={synonymnsSelected || false}
+          synonymnsLoading={word.synonymns.loading}
         />
       )
     })
@@ -23,7 +25,7 @@ export default class WordsContainer extends Component {
       <div id={this.props.id} className={this.props.class}>
         <p>{this.props.heading}</p>
         {wordList}
-        <span className="add" data={this.props.id} onClick={() => {this.props.onAddWord(this.props.columnId)}}>&#65291;</span>
+        <span className="add" data={this.props.id} onClick={() => {this.props.onAddWord(parseInt(this.props.columnId, 10))}}>&#65291;</span>
       </div>
     )
   }
