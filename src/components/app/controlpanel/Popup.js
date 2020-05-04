@@ -1,10 +1,21 @@
 import React from 'react'
 import OtherWord from './Popup/OtherWord'
 
-const Popup = ({showPopup, wordId, otherWords, selectOtherWord, selectAllOtherWords, updateStateOfSelectedOtherWords}) => {
+const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, updateStateOfSelectedOtherWords}) => {
+  
+  //console.log(selectedOtherWords)
+
   const words = otherWords.map(word => {
+    let otherWordSelected = false;
+
+    if(selectedOtherWords){
+      if (selectedOtherWords.includes(word)){
+        otherWordSelected = true;
+      }
+    }
+    
     return (
-      <OtherWord key={word} wordId={wordId} otherWord={word} selectOtherWord={selectOtherWord}/>
+      <OtherWord key={word} wordId={wordId} otherWord={word} onSelectOtherWord={onSelectOtherWord} otherWordSelected={otherWordSelected}/>
     )
   })
 
@@ -12,18 +23,18 @@ const Popup = ({showPopup, wordId, otherWords, selectOtherWord, selectAllOtherWo
     return <span></span>;
   } else {
     return (
-      
-      <div>
-        <p>Select Synonymns:</p>
-        {words}
+      <React.Fragment>
+        <p className="popup-title">select synonymns:</p>
+        <div className="popup">
+          {words}
+        </div>
         <br />
         <br />
-        <button onClick={() => {selectAllOtherWords(wordId)}}>ALL</button>
+        <button onClick={() => {onSelectAllOtherWords(wordId)}}>ALL</button>
         <br />
         <br />
         <button onClick={() => {updateStateOfSelectedOtherWords(wordId)}}>DONE</button>
-      </div>
-      
+      </React.Fragment>
     )
   }
   

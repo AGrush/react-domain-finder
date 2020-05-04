@@ -46,7 +46,8 @@ export default class ControlPanel extends Component {
     },
     popup: {
       wordId: undefined,
-      otherWords: []
+      otherWords: [],
+      selectedOtherWords: []
     }
   }
 
@@ -212,10 +213,10 @@ export default class ControlPanel extends Component {
     })
   }
 
-  onClickSynonymnBtn = (wordId) => {
+  onClickSynonymnBtn = (wordId, synonymnsSelected) => {
     const { words } = this.state
 
-    //console.log(wordId)
+    //console.log(synonymnsSelected)
 
     let theWord = ''
     
@@ -228,10 +229,10 @@ export default class ControlPanel extends Component {
     //console.log(theWord)
 
     this.fetchSynonymns(theWord)
-      .then(data => this.updateSynonymnState(wordId, data))
+      .then(data => this.updateSynonymnState(wordId, data, synonymnsSelected))
   }
 
-  updateSynonymnState = (wordId, wordSynonymns) => {
+  updateSynonymnState = (wordId, wordSynonymns, synonymnsSelected) => {
     const { words, popup } = this.state
 
     const newWords = words.map(word => {
@@ -244,11 +245,11 @@ export default class ControlPanel extends Component {
       } 
     })
 
-    this.setState ({words: newWords, popup: {otherWords: wordSynonymns, wordId: wordId}})
+    this.setState ({words: newWords, popup: {otherWords: wordSynonymns, wordId: wordId, selectedOtherWords: synonymnsSelected}})
   }
 
-  selectOtherWord = (otherWord, wordId) => {
-    const { words} = this.state
+  onSelectOtherWord = (otherWord, wordId) => {
+    const { words, popup} = this.state
 
     //find old synonymns
     let oldSelectedSynonymns = []
@@ -276,10 +277,10 @@ export default class ControlPanel extends Component {
       } 
     })
 
-    this.setState ({words: newWords})
+    this.setState ({words: newWords, popup: {...popup, selectedOtherWords: newSelectedSynonymns}})
   }
 
-  selectAllOtherWords = (otherWord, wordId) => {
+  onSelectAllOtherWords = (otherWord, wordId) => {
     /*
       select all popup.otherWords and add them to word with wordId's synonymns selected array
     */
@@ -418,9 +419,11 @@ export default class ControlPanel extends Component {
         showPopup={showPopup}
         wordId={this.state.popup.wordId}
         otherWords={this.state.popup.otherWords}
-        selectOtherWord={this.selectOtherWord}
-        selectAllOtherWords={this.selectAllOtherWords}
+        selectedOtherWords={this.state.popup.selectedOtherWords}
+        onSelectOtherWord={this.onSelectOtherWord}
+        onSelectAllOtherWords={this.onSelectAllOtherWords}
         updateStateOfSelectedOtherWords={this.updateStateOfSelectedOtherWords}
+        
       />
 
       <Results />
