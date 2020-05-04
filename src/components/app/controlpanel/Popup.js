@@ -2,8 +2,6 @@ import React from 'react'
 import OtherWord from './Popup/OtherWord'
 
 const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, updateStateOfSelectedOtherWords}) => {
-  
-  console.log(showPopup)
 
   const words = otherWords.map(word => {
     let otherWordSelected = false;

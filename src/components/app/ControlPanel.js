@@ -7,18 +7,18 @@ import Popup from './ControlPanel/Popup'
 import axios from 'axios'
 
 
-window.onload = function(){
-  document.getElementById("1").value = "dog";
-  document.getElementById("2").value = "good";
-  //document.querySelector('.synonymnbtn').click();
-}
+// window.onload = function(){
+//   document.getElementById("1").value = "dog";
+//   document.getElementById("2").value = "good";
+//   //document.querySelector('.synonymnbtn').click();
+// }
 
 export default class ControlPanel extends Component {
   state = {
     words: 
     [
       { 
-        word: "dog",
+        word: "",
         id: 1,
         column: 1,
         selected: false,
@@ -30,7 +30,7 @@ export default class ControlPanel extends Component {
         }
       },
       { 
-        word: "good",
+        word: "",
         id: 2,
         column: 2,
         selected: false,
@@ -53,6 +53,10 @@ export default class ControlPanel extends Component {
       otherWords: [],
       selectedOtherWords: [],
       showPopup: false
+    },
+    errorPopup: {
+      onscreen: false,
+      message: ''
     }
   }
 
@@ -89,6 +93,7 @@ export default class ControlPanel extends Component {
     const { words } = this.state
 
     const newWords = words.map(word => {
+      // eslint-disable-next-line
       if(word.id == e.target.id){
         return {...word, word: e.target.value, column: columnId } 
       } else {
@@ -228,10 +233,10 @@ export default class ControlPanel extends Component {
     words.map(word => {
       if(word.id === wordId){
         theWord = word.word
-      }
+      } return null
     })
 
-    if(theWord == ''){
+    if(theWord === ''){
       alert('please enter a word');
       return
     } else {
@@ -462,8 +467,12 @@ export default class ControlPanel extends Component {
         onSelectOtherWord={this.onSelectOtherWord}
         onSelectAllOtherWords={this.onSelectAllOtherWords}
         updateStateOfSelectedOtherWords={this.updateStateOfSelectedOtherWords}
-        
       />
+
+      {/* <ErrorPopup 
+        message={this.state.errorPopup.message}
+        onscreen={this.state.errorPopup.onscreen}
+      /> */}
 
       <Results />
       </React.Fragment>
