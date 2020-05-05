@@ -5,13 +5,16 @@ import { max_number } from '../helpers'
 import Results from './Results'
 import Popup from './ControlPanel/Popup'
 import axios from 'axios'
-
+import ErrorPopup from './ControlPanel/ErrorPopup'
+import SearchButton from './ControlPanel/SearchButton'
 
 // window.onload = function(){
 //   document.getElementById("1").value = "dog";
 //   document.getElementById("2").value = "good";
 //   //document.querySelector('.synonymnbtn').click();
 // }
+
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default class ControlPanel extends Component {
   state = {
@@ -43,7 +46,7 @@ export default class ControlPanel extends Component {
       }
     ],
     options: {
-      com: true,
+      com: false,
       couk: false,
       hyphen: false,
       reverse: false
@@ -55,14 +58,20 @@ export default class ControlPanel extends Component {
       showPopup: false
     },
     errorPopup: {
-      onscreen: false,
+      active: false,
       message: ''
-    }
+    },
+    loading: false
   }
 
   onRemoveWord = id => {
     //console.log('remove')
     const { words } = this.state;
+
+    if(words.length < 2){
+      this.setState({errorPopup: {active: true, message: 'you must have at least one word'}})
+      return
+    }
 
     const updatedWords = words.filter(word => word.id !== id)
     
@@ -135,7 +144,12 @@ export default class ControlPanel extends Component {
       }
     })
 
-    //console.log(arrTwo)
+    if (Array.isArray(arrOne) && arrOne.length === 0){
+      arrOne = arrOne.concat('')
+    }
+    if (Array.isArray(arrTwo) && arrTwo.length === 0){
+      arrTwo = arrTwo.concat('')
+    }
 
     if(options.com === true) {
       domain.push('.com');
@@ -174,7 +188,7 @@ export default class ControlPanel extends Component {
         }
     }
 
-    //console.log('combinedArr =' + combinedArr)
+    console.log('combinedArr =' + combinedArr)
 
    return combinedArr;
   }
@@ -223,6 +237,11 @@ export default class ControlPanel extends Component {
     })
   }
 
+  removeErrorMsg = async() => {
+    await delay(1000);
+    this.setState({errorPopup: {active: false, message: ''}});
+  }
+
   onClickSynonymnBtn = (wordId, synonymnsSelected) => {
     const { words } = this.state
 
@@ -237,7 +256,7 @@ export default class ControlPanel extends Component {
     })
 
     if(theWord === ''){
-      alert('please enter a word');
+      this.setState({errorPopup: {active: true, message: 'please enter a word'}})
       return
     } else {
       this.fetchSynonymns(theWord, wordId)
@@ -253,7 +272,7 @@ export default class ControlPanel extends Component {
     if(wordSynonymns.length > 1){
       showPopup=true
     } else {
-      alert('no synonymns found')
+      this.setState({errorPopup: {active: true, message: 'no synonymns found'}})
       showPopup=false
     }
     // console.log(showPopup)
@@ -359,6 +378,7 @@ export default class ControlPanel extends Component {
 
   fetchResponseAsync(final_urls) {
     const allDomains = [];
+    this.setState({loading: true})
 
     Promise
       .all(final_urls.map(url => axios.get(url)))
@@ -366,7 +386,7 @@ export default class ControlPanel extends Component {
         results.forEach(result => {
           allDomains.push(result.data)
         })
-
+        this.setState({loading: false})
         return allDomains;
       })
       .then(allDomains => this.printResults(allDomains))
@@ -374,8 +394,23 @@ export default class ControlPanel extends Component {
   };
 
   onSubmitForm = (e) => {
-    let { popup } = this.state
+    let { popup, words, options } = this.state
     e.preventDefault();
+
+    let anyWords = ""
+    words.forEach(word => {
+        anyWords = anyWords.concat(word.word)
+    })
+
+    if(anyWords === ''){
+      this.setState({errorPopup: {active: true, message: 'please enter a word'}})
+      return
+    }
+
+    if(options.com == false && options.couk == false){
+      this.setState({errorPopup: {active: true, message: 'please choose .com or .co.uk'}})
+      return
+    }
 
     const urls = this.combineWords();
 
@@ -456,7 +491,8 @@ export default class ControlPanel extends Component {
               />
             </div>
         </div>
-        <input id="clickMe2" type="image" alt="search button" src="https://img.icons8.com/plasticine/100/000000/search.png"></input>
+
+        <SearchButton loading={this.state.loading} />
       </form>
     
       <Popup 
@@ -469,10 +505,11 @@ export default class ControlPanel extends Component {
         updateStateOfSelectedOtherWords={this.updateStateOfSelectedOtherWords}
       />
 
-      {/* <ErrorPopup 
+      <ErrorPopup 
         message={this.state.errorPopup.message}
-        onscreen={this.state.errorPopup.onscreen}
-      /> */}
+        active={this.state.errorPopup.active}
+        removeErrorMsg={this.removeErrorMsg}
+      />
 
       <Results />
       </React.Fragment>

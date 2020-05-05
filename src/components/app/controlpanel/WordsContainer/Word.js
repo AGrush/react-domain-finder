@@ -7,7 +7,7 @@ const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn,
        <input 
           type="text" 
           // eslint-disable-next-line
-          required={wordId===1 && columnId==1}
+          //required={wordId===1 && columnId==1}
           name="word" 
           placeholder="type a word"
           id={wordId} 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Word from './Word'
+import Word from './WordsContainer/Word'
 
 export default class WordsContainer extends Component {
   render() {

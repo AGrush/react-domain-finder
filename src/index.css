@@ -1,3 +1,5 @@
+
+
 /* checkbox */
 .label-hyphen,
 .label-synonymns,
@@ -31,6 +33,7 @@
     position: relative;
 }
 
+
 /* Hide the browser's default checkbox */
 .label-hyphen input {
   position: absolute;
@@ -53,6 +56,7 @@
   width: 25px;
   background-color: #eee;
   color: #fff;
+  transition: all 0.35s ease-in-out;
 }
 
 .checkmark-otherword {
@@ -219,10 +223,10 @@
 }
 
 .label-com .checkmark-com:after {
-  content: "com";
+  content: ".com";
 }
 .label-couk .checkmark-com:after {
-  content: "co.uk";
+  content: ".co.uk";
 }
 
 .label-reverse .checkmark-reverse:after {
@@ -474,6 +478,7 @@ input {
   margin: 6px auto;
   cursor: pointer;
   color: rgb(82, 189, 224);
+  transition: all 0.35s ease-in-out;
 }
 
 .add:hover {
@@ -525,7 +530,7 @@ p {
   margin-bottom: 4px;
 }
 
-#clickMe2 {
+#main-search-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -535,11 +540,11 @@ p {
   text-decoration: none;
 }
 
-#clickMe2:active {
+#main-search-btn:active {
   position: relative;
   top: 1px;
 }
-#clickMe2:focus {
+#main-search-btn:focus {
   outline: none;
 }
 
@@ -557,7 +562,149 @@ p {
     color: rgb(82, 189, 224);
 }
 
+
+/* Place Holder CSS */
+::-webkit-input-placeholder {
+  color: #000;
+  opacity: 0.2;
+  -webkit-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:-moz-placeholder {
+  color: #000;
+  opacity: 0.2;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+::-moz-placeholder {
+  color: #000;
+  opacity: 0.2;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:-ms-input-placeholder {  
+  color: #000;
+  opacity: 0.2;
+  -ms-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+
+/* Place Holder CSS for Focus */
+:hover::-webkit-input-placeholder {
+  opacity: 0.4;
+  -webkit-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:hover:-moz-placeholder {
+  opacity: 0.4;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:hover::-moz-placeholder {
+  opacity: 0.4;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:hover:-ms-input-placeholder {  
+  opacity: 0.4;
+  -ms-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+
+/* Place Holder CSS for Focus */
+:focus::-webkit-input-placeholder {
+  opacity: 0;
+  /* transform: translate(70%); */
+  -webkit-transition: all 0.35s ease-in-out;
+  transition: all 0.35s ease-in-out;
+}
+:focus:-moz-placeholder {
+  opacity: 0;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:focus::-moz-placeholder {
+  opacity: 0;
+  -moz-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:focus:-ms-input-placeholder {  
+  opacity: 0;
+  -ms-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+*:focus {
+  outline: none;
+}
+
+/* popup code */
+/* popup code */
+/* popup code */
+
+.error-popup {
+  position: absolute;
+  text-align: center;
+  left: 50%;
+  top: 17.5%;
+  padding: 10px 10px 11px;
+  color: white;
+  font-weight: 700;
+  background-color: rgba(252, 146, 146, 0.8);
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+}
+
+.error-popup p{
+  margin: 0;
+}
+
+
+/* loading icon code */
+/* loading icon code */
+/* loading icon code */
+
+.loading-icon {
+  max-width: 300px;
+  position: relative;
+  display: block;
+  transform-origin: center;
+  padding-top: 19px;
+  padding-bottom: 18px;
+  background-color: white;
+}
+
+/* error popup code */
+/* error popup code */
+/* error popup code */
+.error-popup {
+  animation: FadeAnimation 1s ease-in forwards;
+}
+
+@keyframes FadeAnimation {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+
+
+
+/* mobile styles */
+
 @media screen and (max-width: 767px){
+  .error-popup {
+    top: 28.5%;
+    width: calc(100% - 150px);
+  }
+
+  
+
   h1{
     font-size: 2.8rem;
     left: 0;
@@ -573,7 +720,7 @@ p {
     padding: 10px;
   }
   
-  #clickMe2 {
+  #main-search-btn {
     padding-left: 52px;
   }
 
@@ -606,75 +753,4 @@ p {
   .checkmark-hyphen{
     top: 10px;
   }
-}
-
-/* Place Holder CSS */
-::-webkit-input-placeholder {
-  color: #000;
-  opacity: 0.5;
-  -webkit-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:-moz-placeholder {
-  color: #000;
-  opacity: 0.5;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-::-moz-placeholder {
-  color: #000;
-  opacity: 0.5;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:-ms-input-placeholder {  
-  color: #000;
-  opacity: 0.5;
-  -ms-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-
-/* Place Holder CSS for Focus */
-:hover::-webkit-input-placeholder {
-  opacity: 0.75;
-  -webkit-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:hover:-moz-placeholder {
-  opacity: 0.75;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:hover::-moz-placeholder {
-  opacity: 0.75;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:hover:-ms-input-placeholder {  
-  opacity: 0.75;
-  -ms-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-
-/* Place Holder CSS for Focus */
-:focus::-webkit-input-placeholder {
-  opacity: 0;
-  transform: translate(70%);
-  -webkit-transition: all 0.35s ease-in-out;
-  transition: all 0.35s ease-in-out;
-}
-:focus:-moz-placeholder {
-  opacity: 0;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:focus::-moz-placeholder {
-  opacity: 0;
-  -moz-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
-}
-:focus:-ms-input-placeholder {  
-  opacity: 0;
-  -ms-transition: opacity 0.35s ease-in-out;
-  transition: opacity 0.35s ease-in-out;
 }
