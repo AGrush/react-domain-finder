@@ -1,27 +1,21 @@
 import React, { Component } from 'react'
 import WordsContainer from './ControlPanel/WordsContainer'
 import Option from './ControlPanel/Option'
-import { max_number } from '../helpers'
+import { max_number, delay } from '../helpers'
 import Results from './Results'
 import Popup from './ControlPanel/Popup'
 import axios from 'axios'
 import ErrorPopup from './ControlPanel/ErrorPopup'
 import SearchButton from './ControlPanel/SearchButton'
-
-// window.onload = function(){
-//   document.getElementById("1").value = "dog";
-//   document.getElementById("2").value = "good";
-//   //document.querySelector('.synonymnbtn').click();
-// }
-
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+import Prefix from './ControlPanel/Prefix'
 
 export default class ControlPanel extends Component {
   state = {
+    prefix: "",
     words: 
     [
       { 
-        word: "",
+        word: "never",
         id: 1,
         column: 1,
         selected: false,
@@ -113,6 +107,12 @@ export default class ControlPanel extends Component {
     this.setState ({words: newWords})
   } 
 
+  onChangePrefix = (e) => {
+    let newPrefix = e.target.value
+
+    this.setState ({prefix: newPrefix})
+  } 
+
   onOptionClick = (name, optionChecked) => {
     const { options } = this.state;
 
@@ -122,7 +122,7 @@ export default class ControlPanel extends Component {
   }
 
   combineWords() {
-    const { words, options } = this.state
+    const { words, options, prefix } = this.state
     let arrOne = []
     let arrTwo = []
     let domain = []
@@ -188,7 +188,10 @@ export default class ControlPanel extends Component {
         }
     }
 
-    console.log('combinedArr =' + combinedArr)
+    //add the prefix
+    combinedArr = combinedArr.map(i => prefix + i)
+
+    // console.log('combinedArr =' + combinedArr)
 
    return combinedArr;
   }
@@ -199,7 +202,7 @@ export default class ControlPanel extends Component {
 
     results.forEach(result=>{
       const string = result.toString()
-      //console.log(string)
+      console.log(string)
       
       //.COM
       if (string.includes('Domain Name')) {
@@ -322,18 +325,40 @@ export default class ControlPanel extends Component {
     this.setState ({words: newWords, popup: {...popup, selectedOtherWords: newSelectedSynonymns}})
   }
 
-  onSelectAllOtherWords = (otherWord, wordId) => {
-    /*
-      select all popup.otherWords and add them to word with wordId's synonymns selected array
-    */
+  onSelectAllOtherWords = (wordId) => {
+    const { words, popup} = this.state
+    let allSynonymns = ''
 
+    const newWords = words.map(word => {
+    
+    // eslint-disable-next-line
+    if(word.id == wordId){
+        allSynonymns = word.synonymns.all
+        return {...word, synonymns: { ...word.synonymns, selected: allSynonymns }} 
+      } else {
+        return word
+      } 
+    })
+
+    this.setState ({words: newWords, popup: {...popup, selectedOtherWords: allSynonymns}})
   }
 
-  updateStateOfSelectedOtherWords = (otherWord, wordId) => {
-    /*
-      add selected words to the 
-    */
+  onRemoveAllOtherWords = (wordId) => {
+    const { words, popup} = this.state
+    let allSynonymns = ''
 
+    const newWords = words.map(word => {
+    
+    // eslint-disable-next-line
+    if(word.id == wordId){
+        allSynonymns = word.synonymns.all
+        return {...word, synonymns: { ...word.synonymns, selected: [] }} 
+      } else {
+        return word
+      } 
+    })
+
+    this.setState ({words: newWords, popup: {...popup, selectedOtherWords: ''}})
   }
 
   fetchSynonymns = async(word, wordId) => {
@@ -354,7 +379,9 @@ export default class ControlPanel extends Component {
     let synonymns = [];
 
     let res = await axios.get(url)
+    //console.log(res.data.toString())
     let roughResults = res.data.toString().split(',')
+    //console.log(roughResults)
     roughResults.forEach(result => {
       //we don't want multi word synonymns
       if(result.split(' ')[1] === undefined){
@@ -435,6 +462,12 @@ export default class ControlPanel extends Component {
       <React.Fragment>
       <form id="form1" method="post" onSubmit={this.onSubmitForm}>
         <div className="wrapper">
+            <Prefix 
+              columnId="1" 
+              heading="prefix"
+              onChangePrefix={this.onChangePrefix}
+            />
+
             <WordsContainer 
               columnId="1" 
               class="col1"
@@ -502,7 +535,7 @@ export default class ControlPanel extends Component {
         selectedOtherWords={this.state.popup.selectedOtherWords}
         onSelectOtherWord={this.onSelectOtherWord}
         onSelectAllOtherWords={this.onSelectAllOtherWords}
-        updateStateOfSelectedOtherWords={this.updateStateOfSelectedOtherWords}
+        onRemoveAllOtherWords={this.onRemoveAllOtherWords}
       />
 
       <ErrorPopup 
@@ -515,4 +548,12 @@ export default class ControlPanel extends Component {
       </React.Fragment>
     )
   }
+}
+
+
+
+window.onload = function(){
+  document.getElementById("1").value = "never";
+  //document.getElementById("2").value = "good";
+  //document.querySelector('.synonymnbtn').click();
 }

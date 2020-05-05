@@ -1,7 +1,7 @@
 import React from 'react'
 import OtherWord from './Popup/OtherWord'
 
-const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, updateStateOfSelectedOtherWords}) => {
+const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, onRemoveAllOtherWords}) => {
 
   const words = otherWords.map(word => {
     let otherWordSelected = false;
@@ -23,15 +23,14 @@ const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherW
     return (
       <React.Fragment>
         <p className="popup-title">select synonymns:</p>
+        <div className="popup-controls">
+          <button onClick={() => {onSelectAllOtherWords(wordId)}}>ALL</button>
+          <button onClick={() => {onRemoveAllOtherWords(wordId)}}>NONE</button>
+        </div>
+        
         <div className="popup">
           {words}
         </div>
-        <br />
-        <br />
-        <button onClick={() => {onSelectAllOtherWords(wordId)}}>ALL</button>
-        <br />
-        <br />
-        <button onClick={() => {updateStateOfSelectedOtherWords(wordId)}}>DONE</button>
       </React.Fragment>
     )
   }

@@ -19,8 +19,6 @@ const Word = ({onRemoveWord, wordId, onChangeWord, columnId, onClickSynonymnBtn,
           <input type="checkbox" checked={synonymnsSelected.toString()} onChange={()=>{onClickSynonymnBtn(wordId, synonymnsSelected)}}/>
           <span className={`checkmark-synonymns loaded-${synonymnsLoading}`}></span>
         </label>
-
-        {/* <button onClick={() => {onClickSynonymnBtn(wordId)}} className="synonymnbtn">s</button> */}
     </div>
   )
 }
