@@ -15,7 +15,7 @@ export default class ControlPanel extends Component {
     words: 
     [
       { 
-        word: "never",
+        word: "",
         id: 1,
         column: 1,
         selected: false,
@@ -202,40 +202,76 @@ export default class ControlPanel extends Component {
 
     results.forEach(result=>{
       const string = result.toString()
-      console.log(string)
       
-      //.COM
+      //.COM FOUND
       if (string.includes('Domain Name')) {
         const newDiv = document.createElement('div')
         newDiv.classList.add('res')
-        newDiv.classList.add('dontexist')
+        newDiv.classList.add('taken')
         document.querySelector('#availableDomains').appendChild(newDiv)
         //console.log('stringggggggg =========== ' + string + ' ============')
-        const domain = string.split('Domain Name: ')[1].split('Registry Domain ID:')[0]; 
-        newDiv.innerHTML = `<span>${domain}</span>`
+        const domainName = string.split('Domain Name: ')[1].split('Registry Domain ID:')[0]; 
+        //console.log(domainName);
+        newDiv.innerHTML = `<span>${domainName}</span>`
       } 
       
       if (string.includes('No match for')) {
         const newDiv = document.createElement('div')
         newDiv.classList.add('res')
-        newDiv.classList.add('exist')
+        newDiv.classList.add('nottaken')
         document.querySelector('#availableDomains').appendChild(newDiv)
         //console.log('stringggggggg =========== ' + string + ' ============')
         const domainName = string.split('No match for "')[1].split('"')[0];
+        //console.log(domainName);
         newDiv.innerHTML = `<span>${domainName}</span>`
       } 
 
-      //.CO.UK
+      //.CO.UK FOUND
       if (string.includes('was able to match')) {
         
         const newDiv = document.createElement('div')
         newDiv.classList.add('res')
-        newDiv.classList.add('dontexist')
+        newDiv.classList.add('taken')
         document.querySelector('#availableDomains').appendChild(newDiv)
         //console.log('stringggggggg =========== ' + string + ' ============')
-        const domainName = string.split('Domain name:')[1].split('Data validation:')[0];
+        //const splitResponse = string.split('Domain name:').toString();
+        console.log(string)
+
+        const split1 = string.split('.co.uk');
+        const split2 = split1[0].split('Domain name:')
+        const domainName = split2[1] + '.co.uk'
+        console.log(domainName);
         newDiv.innerHTML = `<span>${domainName}</span>`
-        //this.setState=({...state, domain = domainName, taken = 0})
+      } 
+
+      //.CO.UK ERROR
+      if (string.includes('cannot be registered')) {
+        
+        const newDiv = document.createElement('div')
+        newDiv.classList.add('res')
+        newDiv.classList.add('cantexist')
+        document.querySelector('#availableDomains').appendChild(newDiv)
+        //console.log('stringggggggg =========== ' + string + ' ============')
+        const split1 = string.split('.co.uk');
+        const split2 = split1[0].split('Error for "')
+        const domainName = split2[1] + '.co.uk'
+        //console.log(domainName);
+        newDiv.innerHTML = `<span>${domainName}</span>`
+      } 
+
+      //.CO.UK ERROR QUOTA
+      if (string.includes('has been exceeded')) {
+        
+        const newDiv = document.createElement('div')
+        newDiv.classList.add('res')
+        newDiv.classList.add('noquota')
+        document.querySelector('#availableDomains').appendChild(newDiv)
+        //console.log('stringggggggg =========== ' + string + ' ============')
+        const split1 = string.split('.co.uk');
+        const split2 = split1[0].split('Error for "')
+        const domainName = split2[1] + '.co.uk'
+        //console.log(domainName);
+        newDiv.innerHTML = `<span>${domainName}</span>`
       } 
     })
   }
@@ -345,16 +381,13 @@ export default class ControlPanel extends Component {
 
   onRemoveAllOtherWords = (wordId) => {
     const { words, popup} = this.state
-    let allSynonymns = ''
 
     const newWords = words.map(word => {
-    
     // eslint-disable-next-line
-    if(word.id == wordId){
-        allSynonymns = word.synonymns.all
-        return {...word, synonymns: { ...word.synonymns, selected: [] }} 
-      } else {
-        return word
+      if(word.id == wordId){
+          return {...word, synonymns: { ...word.synonymns, selected: [] }} 
+        } else {
+          return word
       } 
     })
 
@@ -420,6 +453,51 @@ export default class ControlPanel extends Component {
       .catch(e => console.log(e.message))
   };
 
+  countTotalWords = () => {
+    const { words, options } = this.state
+
+    let leftColN = 0
+    let rightColN = 0
+
+    words.forEach(word => {
+      if(word.column == 1){
+        if(word.word.length > 0){
+          leftColN ++
+        }
+        leftColN = leftColN + word.synonymns.selected.length
+      } else {
+        if(word.word.length > 0){
+          rightColN ++
+        }
+        rightColN = rightColN + word.synonymns.selected.length
+      }
+    })
+
+    let total = leftColN * rightColN
+
+    if (rightColN >= 1 && leftColN == 0){
+      total = rightColN
+    }
+
+    if (rightColN == 0 && leftColN >= 1){
+      total = leftColN
+    }
+
+    if(options.com && options.couk){
+      total = total*2
+    }
+
+    if(options.hyphen){
+      total = total*2
+    }
+
+    if(options.reverse){
+      total = total*2
+    }
+
+    return total
+  }
+
   onSubmitForm = (e) => {
     let { popup, words, options } = this.state
     e.preventDefault();
@@ -434,7 +512,7 @@ export default class ControlPanel extends Component {
       return
     }
 
-    if(options.com == false && options.couk == false){
+    if(options.com === false && options.couk === false){
       this.setState({errorPopup: {active: true, message: 'please choose .com or .co.uk'}})
       return
     }
@@ -460,8 +538,10 @@ export default class ControlPanel extends Component {
     // console.log(showPopup)
     return (
       <React.Fragment>
+      
       <form id="form1" method="post" onSubmit={this.onSubmitForm}>
         <div className="wrapper">
+            
             <Prefix 
               columnId="1" 
               heading="prefix"
@@ -522,6 +602,7 @@ export default class ControlPanel extends Component {
                 optionType="checkmark-reverse"
                 name="reverse"
               />
+              <div className="total-combinations">combinations: {this.countTotalWords()}</div>
             </div>
         </div>
 
@@ -552,8 +633,8 @@ export default class ControlPanel extends Component {
 
 
 
-window.onload = function(){
-  document.getElementById("1").value = "never";
-  //document.getElementById("2").value = "good";
-  //document.querySelector('.synonymnbtn').click();
-}
+// window.onload = function(){
+//   document.getElementById("1").value = "never";
+//   //document.getElementById("2").value = "good";
+//   //document.querySelector('.synonymnbtn').click();
+// }
