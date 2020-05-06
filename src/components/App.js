@@ -513,6 +513,12 @@ export default class App extends Component {
     return total
   }
 
+  hidePopup = () => {
+    const { popup } = this.state
+
+    this.setState({popup: {...popup, showPopup: false}})
+  }
+
   onSubmitForm = (e) => {
     let { popup, words, options } = this.state
     e.preventDefault();
@@ -637,6 +643,7 @@ export default class App extends Component {
           onSelectOtherWord={this.onSelectOtherWord}
           onSelectAllOtherWords={this.onSelectAllOtherWords}
           onRemoveAllOtherWords={this.onRemoveAllOtherWords}
+          hidePopup={this.hidePopup}
         />
 
         <ErrorPopup 

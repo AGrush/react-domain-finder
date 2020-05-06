@@ -1,7 +1,7 @@
 import React from 'react'
 import OtherWord from './Popup/OtherWord'
 
-const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, onRemoveAllOtherWords}) => {
+const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, onRemoveAllOtherWords, hidePopup}) => {
   let words
   if(otherWords !== undefined){
 
@@ -29,6 +29,7 @@ const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherW
         <div className="popup-controls">
           <button onClick={() => {onSelectAllOtherWords(wordId)}}>ALL</button>
           <button onClick={() => {onRemoveAllOtherWords(wordId)}}>NONE</button>
+          <button onClick={() => {hidePopup()}}>HIDE</button>
         </div>
         
         <div className="popup">
