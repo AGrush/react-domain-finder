@@ -4,3 +4,5 @@ export const max_number = numbers => {
 }
 
 export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+

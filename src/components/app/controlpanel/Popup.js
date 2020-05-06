@@ -2,20 +2,23 @@ import React from 'react'
 import OtherWord from './Popup/OtherWord'
 
 const Popup = ({showPopup, wordId, otherWords, onSelectOtherWord, selectedOtherWords, onSelectAllOtherWords, onRemoveAllOtherWords}) => {
+  let words
+  if(otherWords !== undefined){
 
-  const words = otherWords.map(word => {
-    let otherWordSelected = false;
-
-    if(selectedOtherWords){
-      if (selectedOtherWords.includes(word)){
-        otherWordSelected = true;
+      words = otherWords.map(word => {
+      let otherWordSelected = false;
+  
+      if(selectedOtherWords){
+        if (selectedOtherWords.includes(word)){
+          otherWordSelected = true;
+        }
       }
-    }
-    
-    return (
-      <OtherWord key={word} wordId={wordId} otherWord={word} onSelectOtherWord={onSelectOtherWord} otherWordSelected={otherWordSelected}/>
-    )
-  })
+      
+      return (
+        <OtherWord key={word} wordId={wordId} otherWord={word} onSelectOtherWord={onSelectOtherWord} otherWordSelected={otherWordSelected}/>
+      )
+    })
+  }
 
   if (!showPopup) {
     return <span></span>;

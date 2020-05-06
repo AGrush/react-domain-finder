@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect } from 'react'
 import WordsContainer from './ControlPanel/WordsContainer'
 import Option from './ControlPanel/Option'
 import { max_number, delay } from '../helpers'
@@ -8,6 +8,8 @@ import axios from 'axios'
 import ErrorPopup from './ControlPanel/ErrorPopup'
 import SearchButton from './ControlPanel/SearchButton'
 import Prefix from './ControlPanel/Prefix'
+import NumberOfWords from './ControlPanel/NumberOfWords'
+
 
 export default class ControlPanel extends Component {
   state = {
@@ -22,8 +24,7 @@ export default class ControlPanel extends Component {
         synonymns: {
           all:[],
           selected:[],
-          loading: false,
-          noneFound: false
+          loading: false
         }
       },
       { 
@@ -34,8 +35,7 @@ export default class ControlPanel extends Component {
         synonymns: {
           all:[],
           selected: [],
-          loading: false,
-          noneFound: false
+          loading: false
         }
       }
     ],
@@ -93,18 +93,24 @@ export default class ControlPanel extends Component {
 
   onChangeWord = (columnId, e) => {
     //console.log(columnId, e.target.id, e.target.value, [e.target.name]);
-    const { words } = this.state
+    const { words, popup } = this.state
+
+    let showPopup = popup.showPopup;
 
     const newWords = words.map(word => {
       // eslint-disable-next-line
       if(word.id == e.target.id){
+        if (word.word == ""){
+          showPopup = false;
+          return {...word, word: e.target.value, column: columnId, synonymns: { ...word.synonymns, selected: []} } 
+        } else 
         return {...word, word: e.target.value, column: columnId } 
       } else {
         return word
       } 
     })
 
-    this.setState ({words: newWords})
+    this.setState ({words: newWords, popup: {...popup, showPopup}})
   } 
 
   onChangePrefix = (e) => {
@@ -115,6 +121,8 @@ export default class ControlPanel extends Component {
 
   onOptionClick = (name, optionChecked) => {
     const { options } = this.state;
+
+    //this.countTotalWords();
 
     const newOptions = { ...options, [name]: !optionChecked}
     
@@ -282,7 +290,7 @@ export default class ControlPanel extends Component {
   }
 
   onClickSynonymnBtn = (wordId, synonymnsSelected) => {
-    const { words } = this.state
+    const { words, popup } = this.state
 
     //console.log(synonymnsSelected)
 
@@ -291,18 +299,25 @@ export default class ControlPanel extends Component {
     words.map(word => {
       if(word.id === wordId){
         theWord = word.word
+        this.errorLogic(word, wordId, theWord, synonymnsSelected, popup)
       } return null
     })
+  }
 
+  errorLogic = (word, wordId, theWord, synonymnsSelected, popup) => {
     if(theWord === ''){
-      this.setState({errorPopup: {active: true, message: 'please enter a word'}})
-      return
+        // console.log(word.synonymns.selected.length)
+        if(word.synonymns.selected.length > 0){
+          this.setState({popup: {...popup, showPopup: true, selectedOtherWords: synonymnsSelected}})
+          return
+        } 
+        this.setState({errorPopup: {active: true, message: 'please enter a word'}})
+        return
     } else {
       this.fetchSynonymns(theWord, wordId)
       .then(data => this.updateSynonymnState(wordId, data, synonymnsSelected))
       .catch(e => {console.log (e)});
     }
-   
   }
 
   updateSynonymnState = (wordId, wordSynonymns, synonymnsSelected) => {
@@ -463,23 +478,23 @@ export default class ControlPanel extends Component {
       if(word.column == 1){
         if(word.word.length > 0){
           leftColN ++
-        }
+        } 
         leftColN = leftColN + word.synonymns.selected.length
       } else {
         if(word.word.length > 0){
           rightColN ++
-        }
+        } 
         rightColN = rightColN + word.synonymns.selected.length
       }
     })
 
     let total = leftColN * rightColN
 
-    if (rightColN >= 1 && leftColN == 0){
+    if (rightColN >= 0 && leftColN == 0){
       total = rightColN
     }
 
-    if (rightColN == 0 && leftColN >= 1){
+    if (rightColN == 0 && leftColN >= 0){
       total = leftColN
     }
 
@@ -494,7 +509,7 @@ export default class ControlPanel extends Component {
     if(options.reverse){
       total = total*2
     }
-
+      
     return total
   }
 
@@ -529,11 +544,15 @@ export default class ControlPanel extends Component {
   }
 
   render() {
+    this.countTotalWords();
+
     const { words } = this.state
     // eslint-disable-next-line
     const firstColWords = words.filter(word => word.column == 1)
     // eslint-disable-next-line
     const secondColWords = words.filter(word => word.column == 2)
+
+    let totalWords = this.countTotalWords()
  
     // console.log(showPopup)
     return (
@@ -602,7 +621,8 @@ export default class ControlPanel extends Component {
                 optionType="checkmark-reverse"
                 name="reverse"
               />
-              <div className="total-combinations">combinations: {this.countTotalWords()}</div>
+              <NumberOfWords numberOfWords={totalWords}/>
+              
             </div>
         </div>
 
