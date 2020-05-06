@@ -1,5 +1,5 @@
 import React from 'react'
-import loadingGif from '../../../assets/loading-gif.gif'
+import loadingGif from '../../assets/loading-gif.gif'
 
 const SearchButton = ({loading}) => {
   if(loading){
