@@ -23,7 +23,9 @@ export default class App extends Component {
         selected: false,
         synonymns: {
           all:[],
-          selected:[],
+          selected: [],
+          //selected:['1','2','3','4','5','6','7','8','9','0'],
+          //selected:['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
           loading: false
         }
       },
@@ -35,6 +37,8 @@ export default class App extends Component {
         synonymns: {
           all:[],
           selected: [],
+          //selected:['1','2','3','4','5','6','7','8','9','0'],
+          //selected: ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'],
           loading: false
         }
       }
@@ -422,6 +426,8 @@ export default class App extends Component {
       } 
     })
     this.setState ({words: newWords})
+    ////
+
 
     const url = 'https://ag-domain-finder.herokuapp.com/domainfinder/synonyms/' + word;
     let synonymns = [];
@@ -437,6 +443,7 @@ export default class App extends Component {
       }
     })
 
+    
     //set synonymn finished loading state
     const newWords2 = words.map(word => {
       // eslint-disable-next-line
@@ -447,6 +454,7 @@ export default class App extends Component {
       } 
     })
     this.setState ({words: newWords2})
+    /////
 
     return synonymns;
   }
