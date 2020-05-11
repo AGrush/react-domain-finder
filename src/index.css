@@ -517,6 +517,7 @@ input {
   margin: 20px 50px;
   padding: 10px;
   border: 5px rgb(240, 248, 255) solid;
+  border-bottom: none;
   flex-wrap: wrap;
   justify-content: left;
   line-height: 1.7;
