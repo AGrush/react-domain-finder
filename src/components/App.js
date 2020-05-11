@@ -104,7 +104,7 @@ export default class App extends Component {
     const newWords = words.map(word => {
       // eslint-disable-next-line
       if(word.id == e.target.id){
-        if (word.word == ""){
+        if (word.word === ""){
           showPopup = false;
           return {...word, word: e.target.value, column: columnId, synonymns: { ...word.synonymns, selected: []} } 
         } else 
@@ -473,7 +473,13 @@ export default class App extends Component {
         return allDomains;
       })
       .then(allDomains => this.printResults(allDomains))
-      .catch(e => console.log(e.message))
+      .catch(e => {
+        console.log(e.message)
+        if(e.message === 'Network Error'){
+          this.setState({errorPopup: {active: true, message: 'Too Many Combinations!'}})
+          this.setState({loading: false})
+        }
+      })
   };
 
   countTotalWords = () => {
@@ -483,6 +489,7 @@ export default class App extends Component {
     let rightColN = 0
 
     words.forEach(word => {
+      // eslint-disable-next-line
       if(word.column == 1){
         if(word.word.length > 0){
           leftColN ++
@@ -497,11 +504,11 @@ export default class App extends Component {
     })
 
     let total = leftColN * rightColN
-
+    // eslint-disable-next-line
     if (rightColN >= 0 && leftColN == 0){
       total = rightColN
     }
-
+    // eslint-disable-next-line
     if (rightColN == 0 && leftColN >= 0){
       total = leftColN
     }
@@ -527,9 +534,15 @@ export default class App extends Component {
     this.setState({popup: {...popup, showPopup: false}})
   }
 
-  onSubmitForm = (e) => {
+  onSubmitForm = (e, totalWords) => {
     let { popup, words, options } = this.state
     e.preventDefault();
+
+    //console.log(totalWords)
+    if(totalWords > '1299'){
+      this.setState({errorPopup: {active: true, message: 'Too many combinations!'}})
+      return
+    }
 
     let anyWords = ""
     words.forEach(word => {
@@ -572,7 +585,7 @@ export default class App extends Component {
     return (
       <React.Fragment>
         <Header />
-        <form id="form1" method="post" onSubmit={this.onSubmitForm}>
+        <form id="form1" method="post" onSubmit={(e) => this.onSubmitForm(e, totalWords)}>
           <div className="wrapper">
               
               <Prefix 

@@ -513,19 +513,19 @@ input {
 
 #availableDomains {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   margin: 20px 50px;
   padding: 10px;
   border: 5px rgb(240, 248, 255) solid;
   flex-wrap: wrap;
-  height: 100vh;
   justify-content: left;
   line-height: 1.7;
 }
 
 .res {
   margin-bottom: 5px;
-  max-width: 220px;
+  min-width: 18%;
+  padding: 0 1%;
   text-transform: lowercase;
 }
 
@@ -803,6 +803,9 @@ p {
 /* mobile styles */
 
 @media screen and (max-width: 767px){
+  .display-combinations {
+    align-self: center;
+  }
   .total-combinations{
     text-align: center;
     left: -14px;
@@ -820,11 +823,21 @@ p {
 
   
   .error-popup {
-    top: 12.5%;
+    top: 50%;
+    position: fixed;
+    color: black;
     width: calc(100% - 150px);
+    background-color: white;
+    height: 100vh;
+    text-align: center;
+    width: 100%;
+    z-index: 999;
   }
 
-  
+  .error-popup p {
+    top: 50%;
+    position: relative;
+  }
 
   h1{
     font-size: 2.8rem;
